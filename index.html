@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)file:///C:/Users/mikes/Downloads/index_2.html -->
+<html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Het Buurtbord</title>
+
+  <!-- Supabase client via CDN — geen build-tools nodig -->
+  <script src="./Het Buurtbord_files/supabase-js@2"></script>
+
+  <style>
+    /* ---------- Vormgeving ---------- */
+    :root {
+      --papier:      #f4efe6;
+      --inkt:        #2b2723;
+      --zacht:       #8a8175;
+      --kaart:       #fffdf8;
+      --lijn:        #e3dccd;
+      --groen:       #5c7a52;   /* te geef   */
+      --oker:        #c08a3e;   /* gezocht   */
+      --blauw:       #4a6d80;   /* samen doen*/
+      --nieuw:       #c9482f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--papier);
+      color: var(--inkt);
+      font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+      line-height: 1.5;
+    }
+    header {
+      text-align: center;
+      padding: 2.5rem 1rem 1.5rem;
+      border-bottom: 1px solid var(--lijn);
+    }
+    header h1 { font-size: 2.4rem; margin: 0; letter-spacing: -0.01em; }
+    header p  { color: var(--zacht); margin: 0.4rem 0 0; font-style: italic; }
+
+    main { max-width: 640px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+    /* ---------- Formulier ---------- */
+    .plaatsen {
+      background: var(--kaart);
+      border: 1px solid var(--lijn);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .plaatsen h2 { margin: 0 0 1rem; font-size: 1.2rem; }
+    .veld { margin-bottom: 0.85rem; }
+    label { display: block; font-size: 0.85rem; color: var(--zacht); margin-bottom: 0.25rem; }
+    input, select, textarea {
+      width: 100%; padding: 0.55rem 0.65rem;
+      border: 1px solid var(--lijn); border-radius: 6px;
+      font: inherit; background: var(--papier); color: var(--inkt);
+    }
+    textarea { resize: vertical; min-height: 3rem; }
+    .twee { display: flex; gap: 0.75rem; }
+    .twee > div { flex: 1; }
+    #ruilVeld { display: none; }   /* alleen tonen bij 'gezocht' */
+    button {
+      background: var(--inkt); color: var(--papier);
+      border: none; border-radius: 6px;
+      padding: 0.65rem 1.2rem; font: inherit; cursor: pointer;
+      margin-top: 0.25rem;
+    }
+    button:hover { opacity: 0.9; }
+
+    /* ---------- Berichten ---------- */
+    .bericht {
+      background: var(--kaart);
+      border: 1px solid var(--lijn);
+      border-left: 4px solid var(--lijn);
+      border-radius: 8px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 0.9rem;
+      position: relative;
+    }
+    .bericht.te_geef   { border-left-color: var(--groen); }
+    .bericht.gezocht   { border-left-color: var(--oker);  }
+    .bericht.samen_doen{ border-left-color: var(--blauw); }
+
+    .label {
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em;
+      font-weight: 600;
+    }
+    .te_geef   .label { color: var(--groen); }
+    .gezocht   .label { color: var(--oker);  }
+    .samen_doen .label{ color: var(--blauw); }
+
+    .tekst { margin: 0.35rem 0 0.6rem; font-size: 1.05rem; }
+    .ruil  { font-style: italic; color: var(--zacht); margin: 0 0 0.6rem; }
+    .ondertekening { font-size: 0.9rem; color: var(--zacht); }
+    .ondertekening b { color: var(--inkt); font-weight: 600; }
+
+    .nieuw-vlag {
+      position: absolute; top: 0.8rem; right: 0.9rem;
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em;
+      color: var(--nieuw); font-weight: 700;
+    }
+    .leeg { text-align: center; color: var(--zacht); font-style: italic; padding: 2rem 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Het Buurtbord</h1>
+    <p>Een prikbord voor onze straat — om elkaar te leren kennen</p>
+  </header>
+
+  <main>
+    <!-- Nieuw bericht plaatsen -->
+    <section class="plaatsen">
+      <h2>Iets plaatsen</h2>
+
+      <div class="veld">
+        <label for="soort">Wat wil je?</label>
+        <select id="soort">
+          <option value="te_geef">Te leen / te geef</option>
+          <option value="gezocht">Gezocht</option>
+          <option value="samen_doen">Samen doen</option>
+        </select>
+      </div>
+
+      <div class="veld">
+        <label for="tekst">Je bericht</label>
+        <textarea id="tekst" placeholder="Bijv. Ik heb een ladder die je mag lenen."></textarea>
+      </div>
+
+      <div class="veld" id="ruilVeld">
+        <label for="ruil">En dit bied ik ertegenover (optioneel)</label>
+        <input id="ruil" type="text" placeholder="Bijv. Ik bak er een taart voor terug.">
+      </div>
+
+      <div class="twee">
+        <div class="veld">
+          <label for="naam">Je naam</label>
+          <input id="naam" type="text" placeholder="Sanne">
+        </div>
+        <div class="veld">
+          <label for="huisnummer">Huisnummer</label>
+          <input id="huisnummer" type="text" placeholder="14">
+        </div>
+      </div>
+
+      <button id="plaatsKnop">Op het bord zetten</button>
+    </section>
+
+    <!-- Het bord -->
+    <section id="bord">
+          <article class="bericht te_geef">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Te leen / te geef</span>
+            <p class="tekst">ik heb voor de liefhebber mooie camping matras liggen</p>
+            
+            <p class="ondertekening"><b>mike</b> van nr. 27</p>
+          </article>
+          <article class="bericht samen_doen">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Samen doen</span>
+            <p class="tekst">even stappen ?</p>
+            
+            <p class="ondertekening"><b>mike</b> van nr. 27</p>
+          </article></section>
+  </main>
+
+  <script>
+    /* =========================================================
+       1. Verbinding met Supabase
+       Dit zijn je Project URL en publishable key — die hóren
+       hier in de broncode te staan, dat is veilig.
+       ========================================================= */
+    const SUPABASE_URL = 'https://zfbahltilsexlzlqdyxs.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_mufq7USEGM7n9QDYWeUrOw_xd9eoMy8';
+
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    /* =========================================================
+       2. Het ruil-veld alleen tonen bij 'gezocht'
+       ========================================================= */
+    const soortKeuze = document.getElementById('soort');
+    const ruilVeld   = document.getElementById('ruilVeld');
+    soortKeuze.addEventListener('change', () => {
+      ruilVeld.style.display = soortKeuze.value === 'gezocht' ? 'block' : 'none';
+    });
+
+    /* =========================================================
+       3. Berichten ophalen en tonen
+       ========================================================= */
+    const labels = {
+      te_geef:    'Te leen / te geef',
+      gezocht:    'Gezocht',
+      samen_doen: 'Samen doen'
+    };
+
+    async function laadBerichten() {
+      const { data, error } = await db
+        .from('berichten')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      const bord = document.getElementById('bord');
+
+      if (error) {
+        bord.innerHTML = '<p class="leeg">Kon de berichten niet laden: ' + error.message + '</p>';
+        return;
+      }
+      if (!data || data.length === 0) {
+        bord.innerHTML = '<p class="leeg">Nog geen berichten. Zet de eerste op het bord!</p>';
+        return;
+      }
+
+      const eenWeek = 7 * 24 * 60 * 60 * 1000;
+      bord.innerHTML = data.map(b => {
+        const isNieuw = (Date.now() - new Date(b.created_at).getTime()) < eenWeek;
+        return `
+          <article class="bericht ${b.soort}">
+            ${isNieuw ? '<span class="nieuw-vlag">nieuw deze week</span>' : ''}
+            <span class="label">${labels[b.soort] || b.soort}</span>
+            <p class="tekst">${ontsmet(b.tekst)}</p>
+            ${b.ruil ? `<p class="ruil">Ertegenover: ${ontsmet(b.ruil)}</p>` : ''}
+            <p class="ondertekening"><b>${ontsmet(b.naam)}</b> van nr. ${ontsmet(b.huisnr)}</p>
+          </article>`;
+      }).join('');
+    }
+
+    // Kleine beveiliging: voorkom dat ingevoerde tekst als HTML wordt uitgevoerd
+    function ontsmet(s) {
+      const d = document.createElement('div');
+      d.textContent = s ?? '';
+      return d.innerHTML;
+    }
+
+    /* =========================================================
+       4. Een nieuw bericht plaatsen
+       ========================================================= */
+    document.getElementById('plaatsKnop').addEventListener('click', async () => {
+      const soort      = soortKeuze.value;
+      const tekst      = document.getElementById('tekst').value.trim();
+      const ruil       = document.getElementById('ruil').value.trim();
+      const naam       = document.getElementById('naam').value.trim();
+      const huisnummer = document.getElementById('huisnummer').value.trim();
+
+      if (!tekst || !naam || !huisnummer) {
+        alert('Vul je bericht, naam en huisnummer in.');
+        return;
+      }
+
+      const { error } = await db.from('berichten').insert({
+        soort,
+        tekst,
+        ruil: (soort === 'gezocht' && ruil) ? ruil : null,
+        naam,
+        huisnr: huisnummer
+      });
+
+      if (error) {
+        alert('Plaatsen lukte niet: ' + error.message);
+        return;
+      }
+
+      // Velden leegmaken en bord verversen
+      document.getElementById('tekst').value = '';
+      document.getElementById('ruil').value  = '';
+      laadBerichten();
+    });
+
+    /* =========================================================
+       5. Bij het openen meteen laden
+       ========================================================= */
+    laadBerichten();
+  </script>
+
+
+</body></html>
