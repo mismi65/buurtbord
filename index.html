@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0045)file:///C:/Users/mikes/Downloads/index_2.html -->
+<!-- saved from url=(0045)file:///C:/Users/mikes/Downloads/index_3.html -->
 <html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Het Buurtbord</title>
 
-  <!-- Supabase client via CDN — geen build-tools nodig -->
+  <!-- Supabase client -->
   <script src="./Het Buurtbord_files/supabase-js@2"></script>
 
   <style>
@@ -66,6 +66,19 @@
       margin-top: 0.25rem;
     }
     button:hover { opacity: 0.9; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ---------- Status melding ---------- */
+    .status {
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 4px;
+      display: none;
+    }
+    .status.success { background: #d4edda; color: #155724; display: block; }
+    .status.error { background: #f8d7da; color: #721c24; display: block; }
+    .status.info { background: #d1ecf1; color: #0c5460; display: block; }
 
     /* ---------- Berichten ---------- */
     .bericht {
@@ -100,6 +113,20 @@
       color: var(--nieuw); font-weight: 700;
     }
     .leeg { text-align: center; color: var(--zacht); font-style: italic; padding: 2rem 0; }
+
+    .delete-btn {
+      position: absolute; top: 0.8rem; right: 0.9rem;
+      background: var(--nieuw);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .bericht:hover .delete-btn { opacity: 1; }
   </style>
 </head>
 <body>
@@ -144,12 +171,22 @@
       </div>
 
       <button id="plaatsKnop">Op het bord zetten</button>
+      <div id="status" class="status"></div>
     </section>
 
     <!-- Het bord -->
     <section id="bord">
+          <article class="bericht gezocht">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <button class="delete-btn" onclick="deleteBericht(0)">verwijderen</button>
+            <span class="label">Gezocht</span>
+            <p class="tekst">ik ben mn kat kwijt. Heeft iemand deze gezien ?</p>
+            
+            <p class="ondertekening"><b>mike</b> van nr. 27</p>
+          </article>
           <article class="bericht te_geef">
             <span class="nieuw-vlag">nieuw deze week</span>
+            <button class="delete-btn" onclick="deleteBericht(1)">verwijderen</button>
             <span class="label">Te leen / te geef</span>
             <p class="tekst">ik heb voor de liefhebber mooie camping matras liggen</p>
             
@@ -157,6 +194,7 @@
           </article>
           <article class="bericht samen_doen">
             <span class="nieuw-vlag">nieuw deze week</span>
+            <button class="delete-btn" onclick="deleteBericht(2)">verwijderen</button>
             <span class="label">Samen doen</span>
             <p class="tekst">even stappen ?</p>
             
@@ -166,26 +204,29 @@
 
   <script>
     /* =========================================================
-       1. Verbinding met Supabase
-       Dit zijn je Project URL en publishable key — die hóren
-       hier in de broncode te staan, dat is veilig.
+       SUPABASE SETUP
        ========================================================= */
     const SUPABASE_URL = 'https://zfbahltilsexlzlqdyxs.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_mufq7USEGM7n9QDYWeUrOw_xd9eoMy8';
 
-    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    let db = null;
+    let useSupabase = false;
+
+    // Probeer Supabase te initializeren
+    if (window.supabase) {
+      try {
+        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        useSupabase = true;
+        console.log('✓ Supabase verbonden');
+      } catch (e) {
+        console.warn('Supabase niet beschikbaar, gebruik localStorage', e);
+      }
+    } else {
+      console.warn('Supabase SDK niet geladen, gebruik localStorage');
+    }
 
     /* =========================================================
-       2. Het ruil-veld alleen tonen bij 'gezocht'
-       ========================================================= */
-    const soortKeuze = document.getElementById('soort');
-    const ruilVeld   = document.getElementById('ruilVeld');
-    soortKeuze.addEventListener('change', () => {
-      ruilVeld.style.display = soortKeuze.value === 'gezocht' ? 'block' : 'none';
-    });
-
-    /* =========================================================
-       3. Berichten ophalen en tonen
+       LABELS & HELPERS
        ========================================================= */
     const labels = {
       te_geef:    'Te leen / te geef',
@@ -193,29 +234,63 @@
       samen_doen: 'Samen doen'
     };
 
-    async function laadBerichten() {
-      const { data, error } = await db
-        .from('berichten')
-        .select('*')
-        .order('created_at', { ascending: false });
+    function ontsmet(s) {
+      const d = document.createElement('div');
+      d.textContent = s ?? '';
+      return d.innerHTML;
+    }
 
+    function showStatus(message, type = 'info') {
+      const el = document.getElementById('status');
+      el.textContent = message;
+      el.className = 'status ' + type;
+      if (type !== 'error') setTimeout(() => { el.className = 'status'; }, 3000);
+    }
+
+    /* =========================================================
+       BERICHTEN LADEN EN TONEN
+       ========================================================= */
+    async function laadBerichten() {
+      let berichten = [];
+
+      if (useSupabase && db) {
+        try {
+          const { data, error } = await db
+            .from('berichten')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+          if (error) throw error;
+          berichten = data || [];
+        } catch (e) {
+          console.warn('Supabase ophalen mislukt, probeer localStorage:', e);
+          berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
+        }
+      } else {
+        // Alleen localStorage gebruiken
+        berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
+      }
+
+      renderBerichten(berichten);
+    }
+
+    function renderBerichten(berichten) {
       const bord = document.getElementById('bord');
 
-      if (error) {
-        bord.innerHTML = '<p class="leeg">Kon de berichten niet laden: ' + error.message + '</p>';
-        return;
-      }
-      if (!data || data.length === 0) {
+      if (!berichten || berichten.length === 0) {
         bord.innerHTML = '<p class="leeg">Nog geen berichten. Zet de eerste op het bord!</p>';
         return;
       }
 
       const eenWeek = 7 * 24 * 60 * 60 * 1000;
-      bord.innerHTML = data.map(b => {
-        const isNieuw = (Date.now() - new Date(b.created_at).getTime()) < eenWeek;
+      bord.innerHTML = berichten.map((b, idx) => {
+        const createdAt = b.created_at ? new Date(b.created_at).getTime() : Date.now();
+        const isNieuw = (Date.now() - createdAt) < eenWeek;
+        
         return `
           <article class="bericht ${b.soort}">
             ${isNieuw ? '<span class="nieuw-vlag">nieuw deze week</span>' : ''}
+            <button class="delete-btn" onclick="deleteBericht(${idx})">verwijderen</button>
             <span class="label">${labels[b.soort] || b.soort}</span>
             <p class="tekst">${ontsmet(b.tekst)}</p>
             ${b.ruil ? `<p class="ruil">Ertegenover: ${ontsmet(b.ruil)}</p>` : ''}
@@ -224,49 +299,90 @@
       }).join('');
     }
 
-    // Kleine beveiliging: voorkom dat ingevoerde tekst als HTML wordt uitgevoerd
-    function ontsmet(s) {
-      const d = document.createElement('div');
-      d.textContent = s ?? '';
-      return d.innerHTML;
-    }
-
     /* =========================================================
-       4. Een nieuw bericht plaatsen
+       NIEUW BERICHT PLAATSEN
        ========================================================= */
     document.getElementById('plaatsKnop').addEventListener('click', async () => {
-      const soort      = soortKeuze.value;
+      const plaatsBtn = document.getElementById('plaatsKnop');
+      plaatsBtn.disabled = true;
+
+      const soort      = document.getElementById('soort').value;
       const tekst      = document.getElementById('tekst').value.trim();
       const ruil       = document.getElementById('ruil').value.trim();
       const naam       = document.getElementById('naam').value.trim();
       const huisnummer = document.getElementById('huisnummer').value.trim();
 
       if (!tekst || !naam || !huisnummer) {
-        alert('Vul je bericht, naam en huisnummer in.');
+        showStatus('Vul je bericht, naam en huisnummer in.', 'error');
+        plaatsBtn.disabled = false;
         return;
       }
 
-      const { error } = await db.from('berichten').insert({
+      const nieuwBericht = {
         soort,
         tekst,
         ruil: (soort === 'gezocht' && ruil) ? ruil : null,
         naam,
-        huisnr: huisnummer
-      });
+        huisnr: huisnummer,
+        created_at: new Date().toISOString()
+      };
 
-      if (error) {
-        alert('Plaatsen lukte niet: ' + error.message);
-        return;
+      if (useSupabase && db) {
+        try {
+          const { error } = await db.from('berichten').insert(nieuwBericht);
+          if (error) throw error;
+          showStatus('Bericht geplaatst! 🎉', 'success');
+        } catch (e) {
+          console.warn('Supabase plaatsen mislukt, opslaan in localStorage:', e);
+          // Fallback: opslaan in localStorage
+          let berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
+          berichten.unshift(nieuwBericht);
+          localStorage.setItem('buurtbord_berichten', JSON.stringify(berichten));
+          showStatus('Bericht opgeslagen (offline)', 'success');
+        }
+      } else {
+        // Alleen localStorage
+        let berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
+        berichten.unshift(nieuwBericht);
+        localStorage.setItem('buurtbord_berichten', JSON.stringify(berichten));
+        showStatus('Bericht opgeslagen', 'success');
       }
 
       // Velden leegmaken en bord verversen
       document.getElementById('tekst').value = '';
       document.getElementById('ruil').value  = '';
-      laadBerichten();
+      document.getElementById('naam').value  = '';
+      document.getElementById('huisnummer').value = '';
+      document.getElementById('soort').value = 'te_geef';
+      document.getElementById('ruilVeld').style.display = 'none';
+      plaatsBtn.disabled = false;
+
+      await laadBerichten();
     });
 
     /* =========================================================
-       5. Bij het openen meteen laden
+       BERICHT VERWIJDEREN
+       ========================================================= */
+    function deleteBericht(idx) {
+      if (!confirm('Dit bericht echt verwijderen?')) return;
+
+      let berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
+      berichten.splice(idx, 1);
+      localStorage.setItem('buurtbord_berichten', JSON.stringify(berichten));
+      showStatus('Bericht verwijderd', 'success');
+      laadBerichten();
+    }
+
+    /* =========================================================
+       RUIL-VELD TONEN/VERBERGEN
+       ========================================================= */
+    document.getElementById('soort').addEventListener('change', () => {
+      const ruilVeld = document.getElementById('ruilVeld');
+      ruilVeld.style.display = document.getElementById('soort').value === 'gezocht' ? 'block' : 'none';
+    });
+
+    /* =========================================================
+       INITIALIZE
        ========================================================= */
     laadBerichten();
   </script>
