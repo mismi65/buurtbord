@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0053)file:///C:/Users/mikes/Downloads/index_updated_1.html -->
+<!-- saved from url=(0053)file:///C:/Users/mikes/Downloads/index_updated_2.html -->
 <html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -284,7 +284,7 @@
             <p class="ruil">Ertegenover: Boterkoek</p>
             <p class="ondertekening"><b>Manon</b> van nr. 3</p>
             <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;Manon_3_2026-05-27T19:07:58.697+00:00&#39;);" title="Interesse">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;manon_3_2026-05-27T19:07:58.697+00:00&#39;);" title="Interesse">
                 🤍
               </button>
               
@@ -327,7 +327,7 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
             
             <p class="ondertekening"><b>Manon</b> van nr. 3</p>
             <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;Manon_3_2026-05-27T18:48:18.466+00:00&#39;);" title="Interesse">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;manon_3_2026-05-27T18:48:18.466+00:00&#39;);" title="Interesse">
                 🤍
               </button>
               
@@ -341,7 +341,7 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
             
             <p class="ondertekening"><b>Manon</b> van nr. 3</p>
             <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;Manon_3_2026-05-27T18:46:12.802+00:00&#39;);" title="Interesse">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;manon_3_2026-05-27T18:46:12.802+00:00&#39;);" title="Interesse">
                 🤍
               </button>
               
@@ -522,7 +522,8 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
 
       const eenWeek = 7 * 24 * 60 * 60 * 1000;
       bord.innerHTML = berichten.map((b, idx) => {
-        const berichtId = `${b.naam}_${b.huisnr}_${b.created_at || idx}`;
+        // Zorg dat berichtId consistent is
+        const berichtId = `${b.naam.toLowerCase()}_${b.huisnr.toLowerCase()}_${b.created_at || idx}`;
         const createdAt = b.created_at ? new Date(b.created_at).getTime() : Date.now();
         const isNieuw = (Date.now() - createdAt) < eenWeek;
         const isOwner = mijnNaam && mijnNaam.toLowerCase() === b.naam.toLowerCase();
@@ -559,6 +560,7 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
         document.getElementById('naam').value = mijnNaam;
       }
       
+      // berichtId is al lowercase vanuit renderBerichten
       addInteresse(berichtId, mijnNaam);
     }
 
