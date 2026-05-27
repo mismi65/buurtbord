@@ -114,8 +114,30 @@
     }
     .leeg { text-align: center; color: var(--zacht); font-style: italic; padding: 2rem 0; }
 
+    .bericht-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .interesse-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+    }
+    .interesse-btn:hover { opacity: 0.7; }
+    .interesse-count {
+      font-size: 0.85rem;
+      color: var(--zacht);
+      margin-left: 0.25rem;
+    }
+
     .delete-btn {
-      position: absolute; top: 0.8rem; right: 0.9rem;
       background: var(--nieuw);
       color: white;
       border: none;
@@ -123,10 +145,9 @@
       padding: 0.3rem 0.6rem;
       font-size: 0.75rem;
       cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.2s;
+      margin-left: auto;
     }
-    .bericht:hover .delete-btn { opacity: 1; }
+    .delete-btn:hover { opacity: 0.9; }
   </style>
 </head>
 <body>
@@ -138,7 +159,7 @@
     background: linear-gradient(135deg, 
       rgba(212, 83, 126, 0.08) 0%,
       rgba(29, 158, 117, 0.08) 100%);
-    border-bottom: 1px solid var(--color-border-tertiary);
+    border-bottom: 1px solid var(--lijn);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -149,13 +170,13 @@
     margin: 0 0 0.5rem;
     font-size: 28px;
     font-weight: 500;
-    color: var(--color-text-primary);
+    color: var(--inkt);
     letter-spacing: -0.4px;
   }
   
   .tagline {
     font-size: 21px;
-    color: var(--color-text-secondary);
+    color: var(--zacht);
     margin: 0 0 1.5rem;
     font-weight: 700;
   }
@@ -170,31 +191,31 @@
   .intro-text {
     font-size: 21px;
     line-height: 1.6;
-    color: var(--color-text-primary);
+    color: var(--inkt);
     margin: 0;
   }
   
   .intro-text strong {
     font-weight: 700;
-    color: var(--color-text-primary);
+    color: var(--inkt);
   }
   
   .contrast {
     padding: 1rem;
-    background: var(--color-background-secondary);
-    border-left: 3px solid var(--color-border-info);
-    border-radius: var(--border-radius-md);
+    background: var(--papier);
+    border-left: 3px solid var(--oker);
+    border-radius: 6px;
   }
   
   .contrast p {
     margin: 0;
     font-size: 20px;
     line-height: 1.6;
-    color: var(--color-text-primary);
+    color: var(--inkt);
   }
   
   .contrast em {
-    color: var(--color-text-info);
+    color: var(--oker);
     font-style: italic;
     font-weight: 700;
   }
@@ -303,6 +324,39 @@
     }
 
     /* =========================================================
+       INTERESSE BEHEREN
+       ========================================================= */
+    function getInteresse(berichtId) {
+      const interesse = JSON.parse(localStorage.getItem('buurtbord_interesse') || '{}');
+      return interesse[berichtId] || [];
+    }
+
+    function addInteresse(berichtId, naam) {
+      if (!naam.trim()) {
+        showStatus('Vul je naam in om interesse aan te geven', 'error');
+        return;
+      }
+
+      const interesse = JSON.parse(localStorage.getItem('buurtbord_interesse') || '{}');
+      if (!interesse[berichtId]) {
+        interesse[berichtId] = [];
+      }
+
+      // Check of deze persoon al interesse heeft gegeven
+      const naamLower = naam.toLowerCase();
+      if (interesse[berichtId].some(i => i.toLowerCase() === naamLower)) {
+        // Verwijder interesse
+        interesse[berichtId] = interesse[berichtId].filter(i => i.toLowerCase() !== naamLower);
+      } else {
+        // Voeg toe
+        interesse[berichtId].push(naam);
+      }
+
+      localStorage.setItem('buurtbord_interesse', JSON.stringify(interesse));
+      laadBerichten();
+    }
+
+    /* =========================================================
        BERICHTEN LADEN EN TONEN
        ========================================================= */
     async function laadBerichten() {
@@ -340,20 +394,36 @@
 
       const eenWeek = 7 * 24 * 60 * 60 * 1000;
       bord.innerHTML = berichten.map((b, idx) => {
+        const berichtId = `${b.naam}_${b.huisnr}_${b.created_at || idx}`;
         const createdAt = b.created_at ? new Date(b.created_at).getTime() : Date.now();
         const isNieuw = (Date.now() - createdAt) < eenWeek;
         const isOwner = mijnNaam && mijnNaam.toLowerCase() === b.naam.toLowerCase();
+        const interessen = getInteresse(berichtId);
+        const ikHebInteresse = mijnNaam && interessen.some(i => i.toLowerCase() === mijnNaam.toLowerCase());
         
         return `
           <article class="bericht ${b.soort}">
             ${isNieuw ? '<span class="nieuw-vlag">nieuw deze week</span>' : ''}
-            ${isOwner ? `<button class="delete-btn" onclick="deleteBericht(${idx})">verwijderen</button>` : ''}
             <span class="label">${labels[b.soort] || b.soort}</span>
             <p class="tekst">${ontsmet(b.tekst)}</p>
             ${b.ruil ? `<p class="ruil">Ertegenover: ${ontsmet(b.ruil)}</p>` : ''}
             <p class="ondertekening"><b>${ontsmet(b.naam)}</b> van nr. ${ontsmet(b.huisnr)}</p>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse('${berichtId.replace(/'/g, "\\'")}', '${mijnNaam.replace(/'/g, "\\'")}')" title="Interesse">
+                ${ikHebInteresse ? '❤️' : '🤍'}
+              </button>
+              ${interessen.length > 0 ? `<span class="interesse-count">${interessen.length}</span>` : ''}
+              ${isOwner ? `<button class="delete-btn" onclick="deleteBericht(${idx})">verwijderen</button>` : ''}
+            </div>
           </article>`;
       }).join('');
+    }
+
+    /* =========================================================
+       INTERESSE TOGGLE
+       ========================================================= */
+    function toggleInteresse(berichtId, naam) {
+      addInteresse(berichtId, naam);
     }
 
     /* =========================================================
@@ -408,7 +478,6 @@
       // Velden leegmaken en bord verversen
       document.getElementById('tekst').value = '';
       document.getElementById('ruil').value  = '';
-      document.getElementById('naam').value  = '';
       document.getElementById('huisnummer').value = '';
       document.getElementById('soort').value = 'te_geef';
       document.getElementById('ruilVeld').style.display = 'none';
