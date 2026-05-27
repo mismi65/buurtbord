@@ -409,7 +409,7 @@
             ${b.ruil ? `<p class="ruil">Ertegenover: ${ontsmet(b.ruil)}</p>` : ''}
             <p class="ondertekening"><b>${ontsmet(b.naam)}</b> van nr. ${ontsmet(b.huisnr)}</p>
             <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse('${berichtId.replace(/'/g, "\\'")}', '${mijnNaam.replace(/'/g, "\\'")}')" title="Interesse">
+              <button class="interesse-btn" onclick="toggleInteresse('${berichtId.replace(/'/g, "\\'")}');" title="Interesse">
                 ${ikHebInteresse ? '❤️' : '🤍'}
               </button>
               ${interessen.length > 0 ? `<span class="interesse-count">${interessen.length}</span>` : ''}
@@ -422,8 +422,16 @@
     /* =========================================================
        INTERESSE TOGGLE
        ========================================================= */
-    function toggleInteresse(berichtId, naam) {
-      addInteresse(berichtId, naam);
+    function toggleInteresse(berichtId) {
+      let mijnNaam = document.getElementById('naam').value.trim();
+      
+      if (!mijnNaam) {
+        mijnNaam = prompt('Wat is je naam?');
+        if (!mijnNaam) return;
+        document.getElementById('naam').value = mijnNaam;
+      }
+      
+      addInteresse(berichtId, mijnNaam);
     }
 
     /* =========================================================
@@ -490,9 +498,18 @@
        BERICHT VERWIJDEREN
        ========================================================= */
     function deleteBericht(idx) {
+      const mijnNaam = document.getElementById('naam').value.trim();
+      let berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
+      const bericht = berichten[idx];
+
+      // Check of dit je eigen bericht is
+      if (!bericht || bericht.naam.toLowerCase() !== mijnNaam.toLowerCase()) {
+        showStatus('Dit is niet jouw bericht, je kunt het niet verwijderen.', 'error');
+        return;
+      }
+
       if (!confirm('Dit bericht echt verwijderen?')) return;
 
-      let berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
       berichten.splice(idx, 1);
       localStorage.setItem('buurtbord_berichten', JSON.stringify(berichten));
       showStatus('Bericht verwijderd', 'success');
