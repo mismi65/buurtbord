@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- saved from url=(0045)file:///C:/Users/mikes/Downloads/index_3.html -->
-<html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Het Buurtbord</title>
 
   <!-- Supabase client -->
-  <script src="./Het Buurtbord_files/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     /* ---------- Vormgeving ---------- */
@@ -175,31 +175,7 @@
     </section>
 
     <!-- Het bord -->
-    <section id="bord">
-          <article class="bericht gezocht">
-            <span class="nieuw-vlag">nieuw deze week</span>
-            <button class="delete-btn" onclick="deleteBericht(0)">verwijderen</button>
-            <span class="label">Gezocht</span>
-            <p class="tekst">ik ben mn kat kwijt. Heeft iemand deze gezien ?</p>
-            
-            <p class="ondertekening"><b>mike</b> van nr. 27</p>
-          </article>
-          <article class="bericht te_geef">
-            <span class="nieuw-vlag">nieuw deze week</span>
-            <button class="delete-btn" onclick="deleteBericht(1)">verwijderen</button>
-            <span class="label">Te leen / te geef</span>
-            <p class="tekst">ik heb voor de liefhebber mooie camping matras liggen</p>
-            
-            <p class="ondertekening"><b>mike</b> van nr. 27</p>
-          </article>
-          <article class="bericht samen_doen">
-            <span class="nieuw-vlag">nieuw deze week</span>
-            <button class="delete-btn" onclick="deleteBericht(2)">verwijderen</button>
-            <span class="label">Samen doen</span>
-            <p class="tekst">even stappen ?</p>
-            
-            <p class="ondertekening"><b>mike</b> van nr. 27</p>
-          </article></section>
+    <section id="bord"></section>
   </main>
 
   <script>
@@ -276,6 +252,7 @@
 
     function renderBerichten(berichten) {
       const bord = document.getElementById('bord');
+      const mijnNaam = document.getElementById('naam').value.trim();
 
       if (!berichten || berichten.length === 0) {
         bord.innerHTML = '<p class="leeg">Nog geen berichten. Zet de eerste op het bord!</p>';
@@ -286,11 +263,12 @@
       bord.innerHTML = berichten.map((b, idx) => {
         const createdAt = b.created_at ? new Date(b.created_at).getTime() : Date.now();
         const isNieuw = (Date.now() - createdAt) < eenWeek;
+        const isOwner = mijnNaam && mijnNaam.toLowerCase() === b.naam.toLowerCase();
         
         return `
           <article class="bericht ${b.soort}">
             ${isNieuw ? '<span class="nieuw-vlag">nieuw deze week</span>' : ''}
-            <button class="delete-btn" onclick="deleteBericht(${idx})">verwijderen</button>
+            ${isOwner ? `<button class="delete-btn" onclick="deleteBericht(${idx})">verwijderen</button>` : ''}
             <span class="label">${labels[b.soort] || b.soort}</span>
             <p class="tekst">${ontsmet(b.tekst)}</p>
             ${b.ruil ? `<p class="ruil">Ertegenover: ${ontsmet(b.ruil)}</p>` : ''}
@@ -386,6 +364,5 @@
        ========================================================= */
     laadBerichten();
   </script>
-
-
-</body></html>
+</body>
+</html>
