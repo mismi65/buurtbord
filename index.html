@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="nl">
-<head>
-  <meta charset="UTF-8">
+<!-- saved from url=(0053)file:///C:/Users/mikes/Downloads/index_updated_1.html -->
+<html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Het Buurtbord</title>
 
   <!-- Supabase client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./index_files/supabase-js@2"></script>
 
   <style>
     /* ---------- Vormgeving ---------- */
@@ -131,10 +131,11 @@
       margin: 0;
     }
     .interesse-btn:hover { opacity: 0.7; }
-    .interesse-count {
-      font-size: 0.85rem;
+    .interesse-list {
+      font-size: 0.9rem;
       color: var(--zacht);
-      margin-left: 0.25rem;
+      margin-left: 0.5rem;
+      font-style: italic;
     }
 
     .delete-btn {
@@ -275,7 +276,134 @@
     </section>
 
     <!-- Het bord -->
-    <section id="bord"></section>
+    <section id="bord">
+          <article class="bericht gezocht">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Gezocht</span>
+            <p class="tekst">Lego</p>
+            <p class="ruil">Ertegenover: Boterkoek</p>
+            <p class="ondertekening"><b>Manon</b> van nr. 3</p>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;Manon_3_2026-05-27T19:07:58.697+00:00&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+          <article class="bericht samen_doen">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Samen doen</span>
+            <p class="tekst">een potje monopoly?</p>
+            
+            <p class="ondertekening"><b>mike</b> van nr. 27</p>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;mike_27_2026-05-27T19:05:14.685+00:00&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+          <article class="bericht gezocht">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Gezocht</span>
+            <p class="tekst">een huis met harry potter spullen</p>
+            
+            <p class="ondertekening"><b>mike</b> van nr. 27</p>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;mike_27_2026-05-27T18:57:11.952+00:00&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+          <article class="bericht te_geef">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Te leen / te geef</span>
+            <p class="tekst">Hi Mike, ik heb ook lampen hier maar is het wel de bedoeling dat we dat delen? 
+Wilde reageren op jouw bericht maar dat lukt niet</p>
+            
+            <p class="ondertekening"><b>Manon</b> van nr. 3</p>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;Manon_3_2026-05-27T18:48:18.466+00:00&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+          <article class="bericht samen_doen">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Samen doen</span>
+            <p class="tekst">Ik ben bezig om bloemen te haken, wil je aanhaken welkom op zaterdagochtend om 10 uur</p>
+            
+            <p class="ondertekening"><b>Manon</b> van nr. 3</p>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;Manon_3_2026-05-27T18:46:12.802+00:00&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+          <article class="bericht te_geef">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Te leen / te geef</span>
+            <p class="tekst">ik heb lampen hier</p>
+            
+            <p class="ondertekening"><b>mike</b> van nr. 27</p>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;mike_27_2026-05-27T15:35:47.103+00:00&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+          <article class="bericht gezocht">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Gezocht</span>
+            <p class="tekst">ik ben mn kat kwijt. Heeft iemand deze gezien ?</p>
+            
+            <p class="ondertekening"><b>mike</b> van nr. 27</p>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;mike_27_2026-05-26T15:40:27.952994+00:00&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+          <article class="bericht te_geef">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Te leen / te geef</span>
+            <p class="tekst">ik heb voor de liefhebber mooie camping matras liggen</p>
+            
+            <p class="ondertekening"><b>mike</b> van nr. 27</p>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;mike_27_2026-05-26T08:07:19.306205+00:00&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+          <article class="bericht samen_doen">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Samen doen</span>
+            <p class="tekst">even stappen ?</p>
+            
+            <p class="ondertekening"><b>mike</b> van nr. 27</p>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;mike_27_2026-05-26T08:06:38.454162+00:00&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article></section>
   </main>
 
   <script>
@@ -412,7 +540,7 @@
               <button class="interesse-btn" onclick="toggleInteresse('${berichtId.replace(/'/g, "\\'")}');" title="Interesse">
                 ${ikHebInteresse ? '❤️' : '🤍'}
               </button>
-              ${interessen.length > 0 ? `<span class="interesse-count">${interessen.length}</span>` : ''}
+              ${interessen.length > 0 ? `<span class="interesse-list">${interessen.join(', ')}</span>` : ''}
               ${isOwner ? `<button class="delete-btn" onclick="deleteBericht(${idx})">verwijderen</button>` : ''}
             </div>
           </article>`;
@@ -529,5 +657,6 @@
        ========================================================= */
     laadBerichten();
   </script>
-</body>
-</html>
+
+
+</body></html>
