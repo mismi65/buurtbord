@@ -513,7 +513,7 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
 
     function renderBerichten(berichten) {
       const bord = document.getElementById('bord');
-      const mijnNaam = document.getElementById('naam').value.trim();
+      const mijnNaam = document.getElementById('naam').value.trim() || localStorage.getItem('mijn_naam') || '';
 
       if (!berichten || berichten.length === 0) {
         bord.innerHTML = '<p class="leeg">Nog geen berichten. Zet de eerste op het bord!</p>';
@@ -583,6 +583,10 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
         return;
       }
 
+      // Sla je gegevens op
+      localStorage.setItem('mijn_naam', naam);
+      localStorage.setItem('mijn_huisnummer', huisnummer);
+
       const nieuwBericht = {
         soort,
         tekst,
@@ -628,12 +632,15 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
        BERICHT VERWIJDEREN
        ========================================================= */
     function deleteBericht(idx) {
-      const mijnNaam = document.getElementById('naam').value.trim();
+      const mijnNaam = document.getElementById('naam').value.trim() || localStorage.getItem('mijn_naam');
+      const mijnHuisnr = document.getElementById('huisnummer').value.trim() || localStorage.getItem('mijn_huisnummer');
       let berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
       const bericht = berichten[idx];
 
-      // Check of dit je eigen bericht is
-      if (!bericht || bericht.naam.toLowerCase() !== mijnNaam.toLowerCase()) {
+      // Check of dit je eigen bericht is (naam EN huisnummer moeten matchen)
+      if (!bericht || 
+          bericht.naam.toLowerCase() !== mijnNaam.toLowerCase() ||
+          bericht.huisnr.toLowerCase() !== mijnHuisnr.toLowerCase()) {
         showStatus('Dit is niet jouw bericht, je kunt het niet verwijderen.', 'error');
         return;
       }
@@ -655,8 +662,36 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
     });
 
     /* =========================================================
+       NAAM & HUISNUMMER ONTHOUDEN
+       ========================================================= */
+    function laadMijnGegevens() {
+      const opgeslagenNaam = localStorage.getItem('mijn_naam');
+      const opgeslagenHuisnr = localStorage.getItem('mijn_huisnummer');
+      
+      if (opgeslagenNaam) {
+        document.getElementById('naam').value = opgeslagenNaam;
+      }
+      if (opgeslagenHuisnr) {
+        document.getElementById('huisnummer').value = opgeslagenHuisnr;
+      }
+    }
+
+    function slaaMijnGegevensOp() {
+      const naam = document.getElementById('naam').value.trim();
+      const huisnr = document.getElementById('huisnummer').value.trim();
+      
+      if (naam) localStorage.setItem('mijn_naam', naam);
+      if (huisnr) localStorage.setItem('mijn_huisnummer', huisnr);
+    }
+
+    // Sla op als naam/huisnummer verandert
+    document.getElementById('naam').addEventListener('change', slaaMijnGegevensOp);
+    document.getElementById('huisnummer').addEventListener('change', slaaMijnGegevensOp);
+
+    /* =========================================================
        INITIALIZE
        ========================================================= */
+    laadMijnGegevens();
     laadBerichten();
   </script>
 
