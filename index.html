@@ -670,9 +670,11 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
       
       if (opgeslagenNaam) {
         document.getElementById('naam').value = opgeslagenNaam;
+        document.getElementById('naam').readOnly = true;
       }
       if (opgeslagenHuisnr) {
         document.getElementById('huisnummer').value = opgeslagenHuisnr;
+        document.getElementById('huisnummer').readOnly = true;
       }
     }
 
