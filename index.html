@@ -538,9 +538,9 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
             ${b.ruil ? `<p class="ruil">Ertegenover: ${ontsmet(b.ruil)}</p>` : ''}
             <p class="ondertekening"><b>${ontsmet(b.naam)}</b> van nr. ${ontsmet(b.huisnr)}</p>
             <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse('${berichtId.replace(/'/g, "\\'")}');" title="Interesse">
+              ${!isOwner ? `<button class="interesse-btn" onclick="toggleInteresse('${berichtId.replace(/'/g, "\\'")}');" title="Interesse">
                 ${ikHebInteresse ? '❤️' : '🤍'}
-              </button>
+              </button>` : ''}
               ${interessen.length > 0 ? `<span class="interesse-list">${interessen.join(', ')}</span>` : ''}
               ${isOwner ? `<button class="delete-btn" onclick="deleteBericht(${idx})">verwijderen</button>` : ''}
             </div>
@@ -670,25 +670,15 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
       
       if (opgeslagenNaam) {
         document.getElementById('naam').value = opgeslagenNaam;
-        document.getElementById('naam').readOnly = true;
+        document.getElementById('naam').disabled = true;
       }
       if (opgeslagenHuisnr) {
         document.getElementById('huisnummer').value = opgeslagenHuisnr;
-        document.getElementById('huisnummer').readOnly = true;
+        document.getElementById('huisnummer').disabled = true;
       }
     }
 
-    function slaaMijnGegevensOp() {
-      const naam = document.getElementById('naam').value.trim();
-      const huisnr = document.getElementById('huisnummer').value.trim();
-      
-      if (naam) localStorage.setItem('mijn_naam', naam);
-      if (huisnr) localStorage.setItem('mijn_huisnummer', huisnr);
-    }
 
-    // Sla op als naam/huisnummer verandert
-    document.getElementById('naam').addEventListener('change', slaaMijnGegevensOp);
-    document.getElementById('huisnummer').addEventListener('change', slaaMijnGegevensOp);
 
     /* =========================================================
        INITIALIZE
