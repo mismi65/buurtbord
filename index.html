@@ -530,9 +530,15 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
        ========================================================= */
     async function laadBerichten() {
       let berichten = [];
+      // Berichten ouder dan 30 dagen worden automatisch opgeruimd
+      const dertigDagenGeleden = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
       if (useSupabase && db) {
         try {
+          // Stap 1: ruim oude berichten op (ouder dan 30 dagen)
+          await db.from('berichten').delete().lt('created_at', dertigDagenGeleden);
+
+          // Stap 2: laad de actuele berichten
           const { data, error } = await db
             .from('berichten')
             .select('*')
@@ -542,11 +548,13 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
           berichten = data || [];
         } catch (e) {
           console.warn('Supabase ophalen mislukt, probeer localStorage:', e);
-          berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
+          berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]')
+            .filter(b => !b.created_at || b.created_at >= dertigDagenGeleden);
         }
       } else {
         // Alleen localStorage gebruiken
-        berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
+        berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]')
+          .filter(b => !b.created_at || b.created_at >= dertigDagenGeleden);
       }
 
       renderBerichten(berichten);
@@ -583,7 +591,7 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
                 ${ikHebInteresse ? '❤️' : '🤍'}
               </button>` : ''}
               ${interessen.length > 0 ? `<span class="interesse-list">${interessen.join(', ')}</span>` : ''}
-              ${isOwner ? `<button class="delete-btn" onclick="deleteBericht(${idx})">verwijderen</button>` : ''}
+              ${isOwner ? `<button class="delete-btn" onclick="deleteBericht('${b.created_at}')">verwijderen</button>` : ''}
             </div>
           </article>`;
       }).join('');
@@ -672,26 +680,57 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
     /* =========================================================
        BERICHT VERWIJDEREN
        ========================================================= */
-    function deleteBericht(idx) {
-      const mijnNaam = document.getElementById('naam').value.trim() || localStorage.getItem('mijn_naam');
-      const mijnHuisnr = document.getElementById('huisnummer').value.trim() || localStorage.getItem('mijn_huisnummer');
-      let berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
-      const bericht = berichten[idx];
+    async function deleteBericht(createdAt) {
+      const mijnNaam = (document.getElementById('naam').value.trim() || localStorage.getItem('mijn_naam') || '').toLowerCase();
+      const mijnHuisnr = (document.getElementById('huisnummer').value.trim() || localStorage.getItem('mijn_huisnummer') || '').toLowerCase();
 
-      // Check of dit je eigen bericht is (naam EN huisnummer moeten matchen)
-      if (!bericht || 
-          bericht.naam.toLowerCase() !== mijnNaam.toLowerCase() ||
-          bericht.huisnr.toLowerCase() !== mijnHuisnr.toLowerCase()) {
-        showStatus('Dit is niet jouw bericht, je kunt het niet verwijderen.', 'error');
+      if (!mijnNaam || !mijnHuisnr) {
+        showStatus('Vul eerst je naam en huisnummer in.', 'error');
         return;
       }
 
       if (!confirm('Dit bericht echt verwijderen?')) return;
 
-      berichten.splice(idx, 1);
-      localStorage.setItem('buurtbord_berichten', JSON.stringify(berichten));
-      showStatus('Bericht verwijderd', 'success');
-      laadBerichten();
+      if (useSupabase && db) {
+        try {
+          // Verwijder uit Supabase. De match op naam + huisnr beschermt
+          // tegen per ongeluk verwijderen van andermans bericht.
+          const { error, count } = await db
+            .from('berichten')
+            .delete({ count: 'exact' })
+            .eq('created_at', createdAt)
+            .ilike('naam', mijnNaam)
+            .ilike('huisnr', mijnHuisnr);
+
+          if (error) throw error;
+          if (count === 0) {
+            showStatus('Bericht niet gevonden of niet van jou.', 'error');
+            return;
+          }
+          showStatus('Bericht verwijderd', 'success');
+        } catch (e) {
+          console.warn('Supabase verwijderen mislukt:', e);
+          showStatus('Verwijderen mislukt: ' + e.message, 'error');
+          return;
+        }
+      } else {
+        // localStorage fallback
+        let berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
+        const voor = berichten.length;
+        berichten = berichten.filter(b =>
+          !(b.created_at === createdAt &&
+            b.naam.toLowerCase() === mijnNaam &&
+            b.huisnr.toLowerCase() === mijnHuisnr)
+        );
+        if (berichten.length === voor) {
+          showStatus('Bericht niet gevonden of niet van jou.', 'error');
+          return;
+        }
+        localStorage.setItem('buurtbord_berichten', JSON.stringify(berichten));
+        showStatus('Bericht verwijderd', 'success');
+      }
+
+      await laadBerichten();
     }
 
     /* =========================================================
