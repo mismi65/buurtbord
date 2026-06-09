@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_19.html -->
+<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_20.html -->
 <html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -145,6 +145,8 @@
     .ruil  { font-style: italic; color: var(--zacht); margin: 0 0 0.6rem; }
     .ondertekening { font-size: 0.9rem; color: var(--zacht); }
     .ondertekening b { color: var(--inkt); font-weight: 600; }
+    
+    .datum { font-size: 0.8rem; color: var(--zacht); margin: 0.2rem 0 0; }
 
     .nieuw-vlag {
       position: absolute; top: 0.8rem; right: 0.9rem;
@@ -377,6 +379,18 @@
     /* =========================================================
        INTERESSE BEHEREN
        ========================================================= */
+    function formatTijdGeleden(timestamp) {
+      if (!timestamp) return '';
+      const now = Date.now();
+      const diff = now - new Date(timestamp).getTime();
+      const uren = Math.floor(diff / (1000 * 60 * 60));
+      const dagen = Math.floor(uren / 24);
+      
+      if (dagen > 0) return `${dagen}d geleden`;
+      if (uren > 0) return `${uren}u geleden`;
+      return 'net geplaatst';
+    }
+
     function getInteresse(berichtId) {
       const interesse = JSON.parse(localStorage.getItem('buurtbord_interesse') || '{}');
       return interesse[berichtId] || [];
@@ -462,6 +476,7 @@
             <p class="tekst">${ontsmet(b.tekst)}</p>
             ${b.ruil ? `<p class="ruil">Ertegenover: ${ontsmet(b.ruil)}</p>` : ''}
             <p class="ondertekening"><b>${ontsmet(b.naam)}</b> van nr. ${ontsmet(b.huisnr)}</p>
+            <p class="datum">${formatTijdGeleden(b.created_at)}</p>
             <div class="bericht-actions">
               ${!isOwner ? `<button class="interesse-btn" onclick="toggleInteresse('${berichtId.replace(/'/g, "\\'")}');" title="Interesse">
                 ${ikHebInteresse ? '❤️' : '🤍'}
