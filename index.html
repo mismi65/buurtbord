@@ -662,7 +662,9 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
         const createdAt = b.created_at ? new Date(b.created_at).getTime() : Date.now();
         const isNieuw = (Date.now() - createdAt) < eenWeek;
         const isOud = (Date.now() - createdAt) >= eenMaand;
-        const isOwner = mijnNaam && mijnNaam.toLowerCase() === b.naam.toLowerCase();
+       const isOwner = mijnNaam && mijnHuisnr && 
+                mijnNaam.toLowerCase() === b.naam.toLowerCase() &&
+                mijnHuisnr.toLowerCase() === b.huisnr.toLowerCase();
         const interessen = getInteresse(berichtId);
         const ikHebInteresse = mijnNaam && interessen.some(i => i.toLowerCase() === mijnNaam.toLowerCase());
         
