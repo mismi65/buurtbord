@@ -648,6 +648,7 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
     function renderBerichten(berichten) {
       const bord = document.getElementById('bord');
       const mijnNaam = document.getElementById('naam').value.trim() || localStorage.getItem('mijn_naam') || '';
+      const mijnHuisnr = document.getElementById('huisnummer').value.trim() || localStorage.getItem('mijn_huisnummer') || '';
 
       if (!berichten || berichten.length === 0) {
         bord.innerHTML = '<p class="leeg">Nog geen berichten. Zet de eerste op het bord!</p>';
