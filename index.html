@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_37.html -->
+<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_38.html -->
 <html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Het Buurtbord</title>
 
   <!-- Supabase client -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+  <script src="./index_files/supabase.js.download"></script>
 
   <style>
     /* ---------- Vormgeving ---------- */
@@ -402,7 +402,7 @@
             <p class="tekst">Wanneer gaat er iemand golfen?</p>
             
             <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">3u geleden</p>
+            <p class="datum">4u geleden</p>
             
             <div class="bericht-actions">
               <button class="interesse-btn" onclick="toggleInteresse(&#39;3af6c092-e0ca-4ad8-9c32-342160902fea&#39;);" title="Interesse">
@@ -724,6 +724,7 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
     let cachedInteresses = [];
 
     async function laadBerichten() {
+      console.log('🔄 laadBerichten started');
       let berichten = [];
 
       // Laad EERST alle interesses van Supabase
@@ -731,8 +732,9 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
         try {
           const { data } = await db.from('interesses').select('*');
           cachedInteresses = data || [];
+          console.log('✅ Interesses geladen:', cachedInteresses.length);
         } catch (e) {
-          console.warn('Interesses laden:', e);
+          console.warn('❌ Interesses laden:', e);
           cachedInteresses = [];
         }
       }
@@ -746,15 +748,16 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
 
           if (error) throw error;
           berichten = data || [];
+          console.log('✅ Berichten geladen:', berichten.length);
         } catch (e) {
-          console.warn('Supabase ophalen mislukt, probeer localStorage:', e);
+          console.warn('❌ Supabase ophalen mislukt:', e);
           berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
         }
       } else {
-        // Alleen localStorage gebruiken
         berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
       }
 
+      console.log('🎨 Rendering berichten...');
       await renderBerichten(berichten);
     }
 
@@ -762,6 +765,8 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
       const bord = document.getElementById('bord');
       const mijnNaam = document.getElementById('naam').value.trim() || localStorage.getItem('mijn_naam') || '';
       const mijnHuisnr = document.getElementById('huisnummer').value.trim() || localStorage.getItem('mijn_huisnummer') || '';
+
+      console.log('📊 renderBerichten:', berichten.length, 'berichten, cache:', cachedInteresses.length, 'interesses');
 
       if (!berichten || berichten.length === 0) {
         bord.innerHTML = '<p class="leeg">Nog geen berichten. Zet de eerste op het bord!</p>';
@@ -783,6 +788,9 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
 
         // Haal interesses voor dit bericht uit cache
         const interesses = cachedInteresses.filter(i => i.bericht_id === b.id);
+        if (interesses.length > 0) {
+          console.log(`📌 ${b.naam}: ${interesses.length} interesses`);
+        }
 
         // Bouw interesse-section
         let interesseHtml = '';
@@ -816,6 +824,7 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
       }
 
       bord.innerHTML = html;
+      console.log('✅ Render klaar');
     }
 
     /* =========================================================
