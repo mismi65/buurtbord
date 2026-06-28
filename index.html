@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_32.html -->
+<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_33.html -->
 <html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Het Buurtbord</title>
 
   <!-- Supabase client -->
- <script src="https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+  <script src="./index_files/supabase.js.download"></script>
 
   <style>
     /* ---------- Vormgeving ---------- */
@@ -345,13 +345,47 @@
 
     <!-- Het bord -->
     <section id="bord">
+          <article class="bericht te_geef">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Te leen / te geef</span>
+            <p class="tekst">Schuursponsjes</p>
+            
+            <p class="ondertekening"><b>Sanne</b> van nr. 760</p>
+            <p class="datum">net geplaatst</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;fcb8384f-a654-4e98-bb6a-8e3ba9b3d46c&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        
+          <article class="bericht te_geef">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Te leen / te geef</span>
+            <p class="tekst">Verfkwast</p>
+            
+            <p class="ondertekening"><b>mike</b> van nr. 27</p>
+            <p class="datum">net geplaatst</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;11653d51-f4a0-4f49-a7a4-d45860f6ad3c&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        
           <article class="bericht samen_doen">
             <span class="nieuw-vlag">nieuw deze week</span>
             <span class="label">Samen doen</span>
             <p class="tekst">Wanneer gaat er iemand golfen?</p>
             
             <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">2u geleden</p>
+            <p class="datum">3u geleden</p>
             
             <div class="bericht-actions">
               <button class="interesse-btn" onclick="toggleInteresse(&#39;3af6c092-e0ca-4ad8-9c32-342160902fea&#39;);" title="Interesse">
@@ -823,49 +857,36 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
     }
 
     async function addInteresse(berichtId, naam, huisnr, voorstel_datum) {
-      // Haal bericht-ID van Supabase
-      if (useSupabase && db) {
-        try {
-          const { data: berichten } = await db
-            .from('berichten')
-            .select('id')
-            .limit(100);
-          
-          const bericht = berichten.find(b => 
-            b.naam.toLowerCase() === naam.toLowerCase() && 
-            b.huisnr.toLowerCase() === huisnr.toLowerCase()
-          );
-          
-          if (!bericht) {
-            showStatus('Bericht niet gevonden', 'error');
-            return;
-          }
-
-          // Voeg interesse toe in Supabase
-          const { error } = await db
-            .from('interesses')
-            .insert([{
-              bericht_id: bericht.id,
-              naam: naam,
-              huisnr: huisnr,
-              voorstel_datum: voorstel_datum
-            }]);
-
-          if (error) throw error;
-
-          showStatus('Interesse getoond! ' + naam + ' krijgt je voorstel! 👍', 'success');
-          laadBerichten();
-
-          // Push-notificatie
-          if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification('Het Buurtbord', {
-              body: `Je hebt interesse getoond voor ${voorstel_datum}! De plaatser zal contact opnemen.`
-            });
-          }
-        } catch (e) {
-          console.error('Interesse fout:', e);
-          showStatus('Fout bij interesse toevoegen', 'error');
+      try {
+        if (!useSupabase || !db) {
+          showStatus('Supabase niet beschikbaar', 'error');
+          return;
         }
+
+        // Voeg interesse direct toe met het bericht ID dat we hebben
+        const { error } = await db
+          .from('interesses')
+          .insert([{
+            bericht_id: berichtId,
+            naam: naam,
+            huisnr: huisnr,
+            voorstel_datum: voorstel_datum
+          }]);
+
+        if (error) throw error;
+
+        showStatus('Interesse getoond! 👍', 'success');
+        await laadBerichten();
+
+        // Push-notificatie
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('Het Buurtbord', {
+            body: `Je hebt interesse getoond voor ${voorstel_datum}!`
+          });
+        }
+      } catch (e) {
+        console.error('Interesse error:', e);
+        showStatus('Fout: ' + (e.message || 'onbekend'), 'error');
       }
     }
 
