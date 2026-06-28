@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_36.html -->
+<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_37.html -->
 <html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Het Buurtbord</title>
 
   <!-- Supabase client -->
- <script src="https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+  <script src="./index_files/supabase.js.download"></script>
+
   <style>
     /* ---------- Vormgeving ---------- */
     :root {
@@ -719,8 +720,22 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
     /* =========================================================
        BERICHTEN LADEN EN TONEN
        ========================================================= */
+    /* Globale cache voor interesses */
+    let cachedInteresses = [];
+
     async function laadBerichten() {
       let berichten = [];
+
+      // Laad EERST alle interesses van Supabase
+      if (useSupabase && db) {
+        try {
+          const { data } = await db.from('interesses').select('*');
+          cachedInteresses = data || [];
+        } catch (e) {
+          console.warn('Interesses laden:', e);
+          cachedInteresses = [];
+        }
+      }
 
       if (useSupabase && db) {
         try {
@@ -753,21 +768,10 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
         return;
       }
 
-      // Laad ALLE interesses van Supabase eenmalig
-      let alleInteresses = [];
-      if (useSupabase && db) {
-        try {
-          const { data } = await db.from('interesses').select('*');
-          alleInteresses = data || [];
-        } catch (e) {
-          console.warn('Interesses laden:', e);
-        }
-      }
-
       const eenWeek = 7 * 24 * 60 * 60 * 1000;
       const eenMaand = 30 * 24 * 60 * 60 * 1000;
 
-      // Render berichten
+      // Render berichten met cachedInteresses
       let html = '';
       for (const b of berichten) {
         const createdAt = b.created_at ? new Date(b.created_at).getTime() : Date.now();
@@ -777,8 +781,8 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
                         mijnNaam.toLowerCase() === b.naam.toLowerCase() &&
                         mijnHuisnr.toLowerCase() === b.huisnr.toLowerCase();
 
-        // Haal interesses voor dit bericht
-        const interesses = alleInteresses.filter(i => i.bericht_id === b.id);
+        // Haal interesses voor dit bericht uit cache
+        const interesses = cachedInteresses.filter(i => i.bericht_id === b.id);
 
         // Bouw interesse-section
         let interesseHtml = '';
