@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_33.html -->
+<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_34.html -->
 <html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -802,6 +802,7 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
        INTERESSE TOGGLE
        ========================================================= */
     function toggleInteresse(berichtId) {
+      console.log('toggleInteresse called with ID:', berichtId);
       let mijnNaam = document.getElementById('naam').value.trim();
       let mijnHuisnr = document.getElementById('huisnummer').value.trim();
       
@@ -811,11 +812,13 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
         document.getElementById('naam').value = mijnNaam;
       }
 
+      console.log('Showing datum picker for:', mijnNaam, mijnHuisnr, berichtId);
       // Datum-picker dialog
       showDatumPicker(berichtId, mijnNaam, mijnHuisnr);
     }
 
     function showDatumPicker(berichtId, naam, huisnr) {
+      console.log('showDatumPicker:', berichtId, naam, huisnr);
       const dialog = document.createElement('div');
       dialog.style.cssText = `
         position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -851,12 +854,15 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
 
       document.getElementById('bevestigBtn').addEventListener('click', async () => {
         const datum = document.getElementById('datumSelect').value;
+        console.log('Bevestigen clicked:', berichtId, naam, huisnr, datum);
         await addInteresse(berichtId, naam, huisnr, datum);
         dialog.remove();
       });
     }
 
     async function addInteresse(berichtId, naam, huisnr, voorstel_datum) {
+      console.log('addInteresse called:', {berichtId, naam, huisnr, voorstel_datum});
+      
       try {
         if (!useSupabase || !db) {
           showStatus('Supabase niet beschikbaar', 'error');
@@ -885,7 +891,7 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
           });
         }
       } catch (e) {
-        console.error('Interesse error:', e);
+        console.error('Interesse error details:', e);
         showStatus('Fout: ' + (e.message || 'onbekend'), 'error');
       }
     }
