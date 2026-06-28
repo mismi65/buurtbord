@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_35.html -->
+<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_36.html -->
 <html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Het Buurtbord</title>
 
   <!-- Supabase client -->
-<script src="https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+  <script src="./index_files/supabase.js.download"></script>
 
   <style>
     /* ---------- Vormgeving ---------- */
@@ -590,7 +590,7 @@
 Wilde reageren op jouw bericht maar dat lukt niet</p>
             
             <p class="ondertekening"><b>Manon</b> van nr. 3</p>
-            <p class="datum">31d geleden</p>
+            <p class="datum">32d geleden</p>
             
             <div class="bericht-actions">
               <button class="interesse-btn" onclick="toggleInteresse(&#39;dc37a008-4f37-4972-b958-efad9477467a&#39;);" title="Interesse">
@@ -607,7 +607,7 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
             <p class="tekst">Ik ben bezig om bloemen te haken, wil je aanhaken welkom op zaterdagochtend om 10 uur</p>
             
             <p class="ondertekening"><b>Manon</b> van nr. 3</p>
-            <p class="datum">31d geleden</p>
+            <p class="datum">32d geleden</p>
             
             <div class="bericht-actions">
               <button class="interesse-btn" onclick="toggleInteresse(&#39;29fed0e0-ccfa-4745-aa17-6a74f59a1260&#39;);" title="Interesse">
@@ -887,13 +887,23 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
         }
 
         // Voeg interesse direct toe met het bericht ID dat we hebben
+        // Convert voorstel_datum (DD-M-YYYY string) naar ISO timestamp
+        let isoDateTime = null;
+        if (voorstel_datum) {
+          const parts = voorstel_datum.split('-');
+          if (parts.length === 3) {
+            const d = new Date(parts[2], parts[1] - 1, parts[0], 12, 0, 0);
+            isoDateTime = d.toISOString();
+          }
+        }
+
         const { error } = await db
           .from('interesses')
           .insert([{
             bericht_id: berichtId,
             naam: naam,
             huisnr: huisnr,
-            voorstel_datum: voorstel_datum
+            voorstel_datum: isoDateTime
           }]);
 
         if (error) throw error;
