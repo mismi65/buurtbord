@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_38.html -->
+<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_39.html -->
 <html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Het Buurtbord</title>
+  <link rel="manifest" href="file:///C:/Users/mikes/Downloads/manifest.json">
+  <meta name="theme-color" content="#5c7a52">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <!-- Supabase client -->
- <script src="https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+  <script src="./index_files/supabase.js.download"></script>
 
   <style>
     /* ---------- Vormgeving ---------- */
@@ -348,16 +353,33 @@
           <article class="bericht gezocht">
             <span class="nieuw-vlag">nieuw deze week</span>
             <span class="label">Gezocht</span>
+            <p class="tekst">luchtballon</p>
+            
+            <p class="ondertekening"><b>mike</b> van nr. 27</p>
+            <p class="datum">1u geleden</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;b6a11670-698a-483e-93bd-95686a478ecf&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        
+          <article class="bericht gezocht">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Gezocht</span>
             <p class="tekst">Tweedehands iphoness</p>
             
             <p class="ondertekening"><b>Sanne</b> van nr. 760</p>
-            <p class="datum">net geplaatst</p>
-            
+            <p class="datum">14u geleden</p>
+            <div class="interesse-voorstellen"><div class="voorstel">💬 mike (nr. 27) wil 28-6-2026</div><div class="voorstel">💬 mike (nr. 27) wil 28-6-2026</div><div class="voorstel">💬 mike (nr. 27) wil 28-6-2026</div></div>
             <div class="bericht-actions">
               <button class="interesse-btn" onclick="toggleInteresse(&#39;d190d8f6-cd73-4e0f-9f17-7360a8254cd0&#39;);" title="Interesse">
                 🤍
               </button>
-              
+              <span class="interesse-list">3 voorstellen</span>
               
             </div>
           </article>
@@ -368,7 +390,7 @@
             <p class="tekst">Schuursponsjes</p>
             
             <p class="ondertekening"><b>Sanne</b> van nr. 760</p>
-            <p class="datum">net geplaatst</p>
+            <p class="datum">14u geleden</p>
             
             <div class="bericht-actions">
               <button class="interesse-btn" onclick="toggleInteresse(&#39;fcb8384f-a654-4e98-bb6a-8e3ba9b3d46c&#39;);" title="Interesse">
@@ -385,13 +407,13 @@
             <p class="tekst">Verfkwast</p>
             
             <p class="ondertekening"><b>mike</b> van nr. 27</p>
-            <p class="datum">net geplaatst</p>
-            
+            <p class="datum">14u geleden</p>
+            <div class="interesse-voorstellen"><div class="voorstel">💬 Sanne (nr. 760) wil 28-6-2026</div></div>
             <div class="bericht-actions">
               <button class="interesse-btn" onclick="toggleInteresse(&#39;11653d51-f4a0-4f49-a7a4-d45860f6ad3c&#39;);" title="Interesse">
                 🤍
               </button>
-              
+              <span class="interesse-list">1 voorstel</span>
               
             </div>
           </article>
@@ -402,13 +424,13 @@
             <p class="tekst">Wanneer gaat er iemand golfen?</p>
             
             <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">4u geleden</p>
-            
+            <p class="datum">17u geleden</p>
+            <div class="interesse-voorstellen"><div class="voorstel">💬 Sanne (nr. 760) wil 28-6-2026</div></div>
             <div class="bericht-actions">
               <button class="interesse-btn" onclick="toggleInteresse(&#39;3af6c092-e0ca-4ad8-9c32-342160902fea&#39;);" title="Interesse">
                 🤍
               </button>
-              
+              <span class="interesse-list">1 voorstel</span>
               
             </div>
           </article>
@@ -436,7 +458,7 @@
             <p class="tekst">Een zonnescherm</p>
             
             <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">2d geleden</p>
+            <p class="datum">3d geleden</p>
             
             <div class="bericht-actions">
               <button class="interesse-btn" onclick="toggleInteresse(&#39;d26ea57f-2790-4783-a25a-e88e30e0991f&#39;);" title="Interesse">
@@ -453,7 +475,7 @@
             <p class="tekst">Potje schaken?</p>
             
             <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">5d geleden</p>
+            <p class="datum">6d geleden</p>
             
             <div class="bericht-actions">
               <button class="interesse-btn" onclick="toggleInteresse(&#39;9d45465c-fca5-49e8-aecb-7c06ca685b31&#39;);" title="Interesse">
@@ -470,7 +492,7 @@
             <p class="tekst">Batterijen</p>
             
             <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">8d geleden</p>
+            <p class="datum">9d geleden</p>
             
             <div class="bericht-actions">
               <button class="interesse-btn" onclick="toggleInteresse(&#39;fc51966a-1a1c-4fb9-9f90-8ef007f4496b&#39;);" title="Interesse">
@@ -504,7 +526,7 @@
             <p class="tekst">Voetballen kijken ?</p>
             
             <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">12d geleden</p>
+            <p class="datum">13d geleden</p>
             
             <div class="bericht-actions">
               <button class="interesse-btn" onclick="toggleInteresse(&#39;8bd46db3-5fc5-4098-b860-a55db3559055&#39;);" title="Interesse">
@@ -555,7 +577,7 @@
             <p class="tekst">Lego</p>
             <p class="ruil">Ertegenover: Boterkoek</p>
             <p class="ondertekening"><b>Manon</b> van nr. 3</p>
-            <p class="datum">31d geleden</p>
+            <p class="datum">32d geleden</p>
             
             <div class="bericht-actions">
               <button class="interesse-btn" onclick="toggleInteresse(&#39;99126060-ec59-4cb6-b8e9-4ec4cf711696&#39;);" title="Interesse">
@@ -572,7 +594,7 @@
             <p class="tekst">een potje monopoly?</p>
             
             <p class="ondertekening"><b>mike</b> van nr. 27</p>
-            <p class="datum">31d geleden</p>
+            <p class="datum">32d geleden</p>
             
             <div class="bericht-actions">
               <button class="interesse-btn" onclick="toggleInteresse(&#39;ad0b68a9-139d-4f6b-ada3-98bd58d0464c&#39;);" title="Interesse">
@@ -624,7 +646,7 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
             <p class="tekst">even stappen ?</p>
             
             <p class="ondertekening"><b>mike</b> van nr. 27</p>
-            <p class="datum">33d geleden</p>
+            <p class="datum">34d geleden</p>
             
             <div class="bericht-actions">
               <button class="interesse-btn" onclick="toggleInteresse(&#39;7585a9f8-bdbc-41dd-ac78-ff1b31a0845d&#39;);" title="Interesse">
@@ -722,6 +744,30 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
        ========================================================= */
     /* Globale cache voor interesses */
     let cachedInteresses = [];
+    let lastCheckedInteresses = 0; // Track wat we al hebben gezien
+
+    async function toonNotificatieVoorNieuweInteresses(nieuweInteresses) {
+      const mijnNaam = document.getElementById('naam').value.trim() || localStorage.getItem('mijn_naam') || '';
+      const mijnHuisnr = document.getElementById('huisnummer').value.trim() || localStorage.getItem('mijn_huisnummer') || '';
+      
+      if (!mijnNaam || !mijnHuisnr) return;
+
+      // Filter interesses die voor MIJ zijn
+      const mijnInteresses = nieuweInteresses.filter(i => 
+        i.naam.toLowerCase() === mijnNaam.toLowerCase() && 
+        i.huisnr.toLowerCase() === mijnHuisnr.toLowerCase()
+      );
+
+      if (mijnInteresses.length > 0) {
+        const int = mijnInteresses[0];
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('Het Buurtbord 🏘️', {
+            body: `${int.naam} (nr. ${int.huisnr}) heeft interesse getoond!`,
+            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect fill="%235c7a52" width="192" height="192"/><text x="96" y="120" font-size="100" fill="white" text-anchor="middle" font-weight="bold">🏘️</text></svg>'
+          });
+        }
+      }
+    }
 
     async function laadBerichten() {
       console.log('🔄 laadBerichten started');
@@ -731,6 +777,14 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
       if (useSupabase && db) {
         try {
           const { data } = await db.from('interesses').select('*');
+          
+          // Controleer op NIEUWE interesses voor notificatie
+          if (data && data.length > lastCheckedInteresses) {
+            const nieuweInteresses = data.slice(lastCheckedInteresses);
+            await toonNotificatieVoorNieuweInteresses(nieuweInteresses);
+          }
+          
+          lastCheckedInteresses = data ? data.length : 0;
           cachedInteresses = data || [];
           console.log('✅ Interesses geladen:', cachedInteresses.length);
         } catch (e) {
@@ -1082,6 +1136,10 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
 
     laadMijnGegevens();
     laadBerichten();
+
+    // **POLLING:** Elke 30 sec checken op nieuwe interesses
+    setInterval(laadBerichten, 30000);
+    console.log('🔄 Polling gestart — checkt elke 30 sec op updates!');
   </script>
 
 
