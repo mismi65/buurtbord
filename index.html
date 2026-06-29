@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_39.html -->
+<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_40.html -->
 <html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <!-- Supabase client -->
- <script src="https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+  <script src="./index_files/firebase-app.js.download"></script>
+  <script src="./index_files/firebase-messaging.js.download"></script>
 
   <style>
     /* ---------- Vormgeving ---------- */
@@ -349,321 +350,89 @@
     </section>
 
     <!-- Het bord -->
-    <section id="bord">
-          <article class="bericht gezocht">
-            <span class="nieuw-vlag">nieuw deze week</span>
-            <span class="label">Gezocht</span>
-            <p class="tekst">luchtballon</p>
-            
-            <p class="ondertekening"><b>mike</b> van nr. 27</p>
-            <p class="datum">1u geleden</p>
-            
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;b6a11670-698a-483e-93bd-95686a478ecf&#39;);" title="Interesse">
-                🤍
-              </button>
-              
-              
-            </div>
-          </article>
-        
-          <article class="bericht gezocht">
-            <span class="nieuw-vlag">nieuw deze week</span>
-            <span class="label">Gezocht</span>
-            <p class="tekst">Tweedehands iphoness</p>
-            
-            <p class="ondertekening"><b>Sanne</b> van nr. 760</p>
-            <p class="datum">14u geleden</p>
-            <div class="interesse-voorstellen"><div class="voorstel">💬 mike (nr. 27) wil 28-6-2026</div><div class="voorstel">💬 mike (nr. 27) wil 28-6-2026</div><div class="voorstel">💬 mike (nr. 27) wil 28-6-2026</div></div>
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;d190d8f6-cd73-4e0f-9f17-7360a8254cd0&#39;);" title="Interesse">
-                🤍
-              </button>
-              <span class="interesse-list">3 voorstellen</span>
-              
-            </div>
-          </article>
-        
-          <article class="bericht te_geef">
-            <span class="nieuw-vlag">nieuw deze week</span>
-            <span class="label">Te leen / te geef</span>
-            <p class="tekst">Schuursponsjes</p>
-            
-            <p class="ondertekening"><b>Sanne</b> van nr. 760</p>
-            <p class="datum">14u geleden</p>
-            
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;fcb8384f-a654-4e98-bb6a-8e3ba9b3d46c&#39;);" title="Interesse">
-                🤍
-              </button>
-              
-              
-            </div>
-          </article>
-        
-          <article class="bericht te_geef">
-            <span class="nieuw-vlag">nieuw deze week</span>
-            <span class="label">Te leen / te geef</span>
-            <p class="tekst">Verfkwast</p>
-            
-            <p class="ondertekening"><b>mike</b> van nr. 27</p>
-            <p class="datum">14u geleden</p>
-            <div class="interesse-voorstellen"><div class="voorstel">💬 Sanne (nr. 760) wil 28-6-2026</div></div>
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;11653d51-f4a0-4f49-a7a4-d45860f6ad3c&#39;);" title="Interesse">
-                🤍
-              </button>
-              <span class="interesse-list">1 voorstel</span>
-              
-            </div>
-          </article>
-        
-          <article class="bericht samen_doen">
-            <span class="nieuw-vlag">nieuw deze week</span>
-            <span class="label">Samen doen</span>
-            <p class="tekst">Wanneer gaat er iemand golfen?</p>
-            
-            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">17u geleden</p>
-            <div class="interesse-voorstellen"><div class="voorstel">💬 Sanne (nr. 760) wil 28-6-2026</div></div>
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;3af6c092-e0ca-4ad8-9c32-342160902fea&#39;);" title="Interesse">
-                🤍
-              </button>
-              <span class="interesse-list">1 voorstel</span>
-              
-            </div>
-          </article>
-        
-          <article class="bericht gezocht">
-            <span class="nieuw-vlag">nieuw deze week</span>
-            <span class="label">Gezocht</span>
-            <p class="tekst">Harry Potter schaakbord</p>
-            
-            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">1d geleden</p>
-            
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;b0354086-4872-4ba9-8967-fb396c862619&#39;);" title="Interesse">
-                🤍
-              </button>
-              
-              
-            </div>
-          </article>
-        
-          <article class="bericht gezocht">
-            <span class="nieuw-vlag">nieuw deze week</span>
-            <span class="label">Gezocht</span>
-            <p class="tekst">Een zonnescherm</p>
-            
-            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">3d geleden</p>
-            
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;d26ea57f-2790-4783-a25a-e88e30e0991f&#39;);" title="Interesse">
-                🤍
-              </button>
-              
-              
-            </div>
-          </article>
-        
-          <article class="bericht samen_doen">
-            <span class="nieuw-vlag">nieuw deze week</span>
-            <span class="label">Samen doen</span>
-            <p class="tekst">Potje schaken?</p>
-            
-            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">6d geleden</p>
-            
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;9d45465c-fca5-49e8-aecb-7c06ca685b31&#39;);" title="Interesse">
-                🤍
-              </button>
-              
-              
-            </div>
-          </article>
-        
-          <article class="bericht gezocht">
-            
-            <span class="label">Gezocht</span>
-            <p class="tekst">Batterijen</p>
-            
-            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">9d geleden</p>
-            
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;fc51966a-1a1c-4fb9-9f90-8ef007f4496b&#39;);" title="Interesse">
-                🤍
-              </button>
-              
-              
-            </div>
-          </article>
-        
-          <article class="bericht gezocht">
-            
-            <span class="label">Gezocht</span>
-            <p class="tekst">Golfballen en golf schoenen</p>
-            
-            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">10d geleden</p>
-            
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;b0a95245-6d4d-4839-b492-a78225d4124f&#39;);" title="Interesse">
-                🤍
-              </button>
-              
-              
-            </div>
-          </article>
-        
-          <article class="bericht samen_doen">
-            
-            <span class="label">Samen doen</span>
-            <p class="tekst">Voetballen kijken ?</p>
-            
-            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">13d geleden</p>
-            
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;8bd46db3-5fc5-4098-b860-a55db3559055&#39;);" title="Interesse">
-                🤍
-              </button>
-              
-              
-            </div>
-          </article>
-        
-          <article class="bericht gezocht">
-            
-            <span class="label">Gezocht</span>
-            <p class="tekst">Wie heeft golfballen over?</p>
-            
-            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">19d geleden</p>
-            
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;f47bc3d6-6a8d-4175-b346-ba22f758f452&#39;);" title="Interesse">
-                🤍
-              </button>
-              
-              
-            </div>
-          </article>
-        
-          <article class="bericht samen_doen">
-            
-            <span class="label">Samen doen</span>
-            <p class="tekst">Golfen volgende week woensdag 17 juni</p>
-            
-            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
-            <p class="datum">19d geleden</p>
-            
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;df707de8-b731-4d45-9341-5510402f67eb&#39;);" title="Interesse">
-                🤍
-              </button>
-              
-              
-            </div>
-          </article>
-        
-          <article class="bericht gezocht oud">
-            
-            <span class="label">Gezocht</span>
-            <p class="tekst">Lego</p>
-            <p class="ruil">Ertegenover: Boterkoek</p>
-            <p class="ondertekening"><b>Manon</b> van nr. 3</p>
-            <p class="datum">32d geleden</p>
-            
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;99126060-ec59-4cb6-b8e9-4ec4cf711696&#39;);" title="Interesse">
-                🤍
-              </button>
-              
-              
-            </div>
-          </article>
-        
-          <article class="bericht samen_doen oud">
-            
-            <span class="label">Samen doen</span>
-            <p class="tekst">een potje monopoly?</p>
-            
-            <p class="ondertekening"><b>mike</b> van nr. 27</p>
-            <p class="datum">32d geleden</p>
-            
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;ad0b68a9-139d-4f6b-ada3-98bd58d0464c&#39;);" title="Interesse">
-                🤍
-              </button>
-              
-              
-            </div>
-          </article>
-        
-          <article class="bericht te_geef oud">
-            
-            <span class="label">Te leen / te geef</span>
-            <p class="tekst">Hi Mike, ik heb ook lampen hier maar is het wel de bedoeling dat we dat delen? 
-Wilde reageren op jouw bericht maar dat lukt niet</p>
-            
-            <p class="ondertekening"><b>Manon</b> van nr. 3</p>
-            <p class="datum">32d geleden</p>
-            
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;dc37a008-4f37-4972-b958-efad9477467a&#39;);" title="Interesse">
-                🤍
-              </button>
-              
-              
-            </div>
-          </article>
-        
-          <article class="bericht samen_doen oud">
-            
-            <span class="label">Samen doen</span>
-            <p class="tekst">Ik ben bezig om bloemen te haken, wil je aanhaken welkom op zaterdagochtend om 10 uur</p>
-            
-            <p class="ondertekening"><b>Manon</b> van nr. 3</p>
-            <p class="datum">32d geleden</p>
-            
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;29fed0e0-ccfa-4745-aa17-6a74f59a1260&#39;);" title="Interesse">
-                🤍
-              </button>
-              
-              
-            </div>
-          </article>
-        
-          <article class="bericht samen_doen oud">
-            
-            <span class="label">Samen doen</span>
-            <p class="tekst">even stappen ?</p>
-            
-            <p class="ondertekening"><b>mike</b> van nr. 27</p>
-            <p class="datum">34d geleden</p>
-            
-            <div class="bericht-actions">
-              <button class="interesse-btn" onclick="toggleInteresse(&#39;7585a9f8-bdbc-41dd-ac78-ff1b31a0845d&#39;);" title="Interesse">
-                🤍
-              </button>
-              
-              
-            </div>
-          </article>
-        </section>
+    <section id="bord"><p class="leeg">Nog geen berichten. Zet de eerste op het bord!</p></section>
   </main>
 
   <script>
     /* =========================================================
        SUPABASE SETUP
        ========================================================= */
-    const SUPABASE_URL = 'https://zfbahltilsexlzlqdyxs.supabase.co';
+    /* =========================================================
+       FIREBASE CLOUD MESSAGING SETUP
+       ========================================================= */
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyBcjUd8QWtjYyB2o4mQRcB7e17mmaa8CmM",
+      authDomain: "buurtbord-18966.firebaseapp.com",
+      projectId: "buurtbord-18966",
+      storageBucket: "buurtbord-18966.firebasestorage.app",
+      messagingSenderId: "157567031537",
+      appId: "1:157567031537:web:b527d54ce7b84687a53150"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging();
+
+    // Request permission untuk push notifications
+    async function requestNotificationPermission() {
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          console.log('✅ Notificatie permission granted');
+          
+          // Get FCM token
+          const token = await messaging.getToken({
+            vapidKey: 'BKx8xGbXVkJSaXnjMzPNXL4i_3HzZq4LsYcyMvJKLzPkMqVVCCEpDPGPD_vYMsNvWXJQvP5gPzVyPjEjEjUFiIs'
+          });
+          
+          if (token) {
+            console.log('🔔 FCM Token:', token);
+            await saveFCMToken(token);
+          }
+        }
+      } catch (e) {
+        console.warn('Permission denied:', e);
+      }
+    }
+
+    async function saveFCMToken(token) {
+      const mijnNaam = localStorage.getItem('mijn_naam');
+      const mijnHuisnr = localStorage.getItem('mijn_huisnummer');
+      
+      if (!mijnNaam || !mijnHuisnr || !useSupabase || !db) return;
+
+      try {
+        // Opslaan in Supabase users table
+        const { error } = await db.from('users').upsert([{
+          naam: mijnNaam,
+          huisnr: mijnHuisnr,
+          fcm_token: token,
+          updated_at: new Date().toISOString()
+        }], { onConflict: 'naam,huisnr' });
+
+        if (error) console.warn('Token opslaan:', error);
+        else console.log('✅ Token opgeslagen in Supabase');
+      } catch (e) {
+        console.warn('Token save error:', e);
+      }
+    }
+
+    // Listen for incoming messages
+    messaging.onMessage((payload) => {
+      console.log('📬 Message received:', payload);
+      
+      const notificationTitle = payload.notification?.title || 'Het Buurtbord';
+      const notificationOptions = {
+        body: payload.notification?.body || 'Je hebt interesse!',
+        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect fill="%235c7a52" width="192" height="192"/><text x="96" y="120" font-size="100" fill="white" text-anchor="middle" font-weight="bold">🏘️</text></svg>'
+      };
+
+      new Notification(notificationTitle, notificationOptions);
+      laadBerichten(); // Refresh bord
+    });
+    
+    /* ========================================================= */
     const SUPABASE_KEY = 'sb_publishable_mufq7USEGM7n9QDYWeUrOw_xd9eoMy8';
 
     let db = null;
@@ -1109,6 +878,9 @@ Wilde reageren op jouw bericht maar dat lukt niet</p>
         document.getElementById('huisnummer').value = opgeslagenHuisnr;
         document.getElementById('huisnummer').disabled = true;
       }
+
+      // Request notification permission & get FCM token
+      requestNotificationPermission();
     }
 
 
