@@ -371,29 +371,22 @@
     let cachedInteresses = [];
     let lastCheckedInteresses = 0;
 
- async function toonNotificatieVoorNieuweInteresses(nieuweInteresses, alleBerichten) {
+ async function toonNotificatieVoorNieuweInteresses(nieuweInteresses) {
   const mijnNaam = document.getElementById('naam').value.trim() || localStorage.getItem('mijn_naam') || '';
   const mijnHuisnr = document.getElementById('huisnummer').value.trim() || localStorage.getItem('mijn_huisnummer') || '';
 
   if (!mijnNaam || !mijnHuisnr) return;
 
-  for (const interesse of nieuweInteresses) {
-    // Sla interesses over die ik zelf getoond heb
-    if (interesse.naam.toLowerCase() === mijnNaam.toLowerCase() &&
-        interesse.huisnr.toLowerCase() === mijnHuisnr.toLowerCase()) {
-      continue;
-    }
+  const mijnInteresses = nieuweInteresses.filter(i =>
+    i.naam.toLowerCase() === mijnNaam.toLowerCase() &&
+    i.huisnr.toLowerCase() === mijnHuisnr.toLowerCase()
+  );
 
-    // Zoek het bijbehorende bericht om de echte auteur te checken
-    const bericht = alleBerichten.find(b => b.id === interesse.bericht_id);
-    if (!bericht) continue;
-
-    const isMijnBericht = bericht.naam.toLowerCase() === mijnNaam.toLowerCase() &&
-                           bericht.huisnr.toLowerCase() === mijnHuisnr.toLowerCase();
-
-    if (isMijnBericht && 'Notification' in window && Notification.permission === 'granted') {
+  if (mijnInteresses.length > 0) {
+    const int = mijnInteresses[0];
+    if ('Notification' in window && Notification.permission === 'granted') {
       new Notification('Het Buurtbord 🏘️', {
-        body: `${interesse.naam} (nr. ${interesse.huisnr}) heeft interesse getoond in jouw bericht!`
+        body: `${int.naam} (nr. ${int.huisnr}) heeft interesse getoond!`
       });
     }
   }
