@@ -285,10 +285,12 @@
     if (permission === 'granted') {
       console.log('✅ Notificatie permission granted');
 
-      // Registreer eerst de service worker en wacht tot hij klaar is
       const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
       await navigator.serviceWorker.ready;
       console.log('✅ Service worker geregistreerd:', registration);
+
+      // Workaround voor bekende timing-bug: even wachten tot SW echt actief is
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       const token = await messaging.getToken({
         vapidKey: 'BC4FAm-HIlilgI8wyRTFyEXtOOvw5iWz8JKrotbcfXCl1E5Q_IPG6nFKiscRp7-kKwzslkX37UX3x8GWGcuF_XY',
