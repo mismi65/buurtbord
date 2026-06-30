@@ -372,22 +372,25 @@
     let lastCheckedInteresses = 0;
 
     async function toonNotificatieVoorNieuweInteresses(nieuweInteresses) {
-      const mijnNaam = document.getElementById('naam').value.trim() || localStorage.getItem('mijn_naam') || '';
-      const mijnHuisnr = document.getElementById('huisnummer').value.trim() || localStorage.getItem('mijn_huisnummer') || '';
-      if (!mijnNaam || !mijnHuisnr) return;
-      const mijnInteresses = nieuweInteresses.filter(i =>
-        i.naam.toLowerCase() === mijnNaam.toLowerCase() &&
-        i.huisnr.toLowerCase() === mijnHuisnr.toLowerCase()
-      );
-      if (mijnInteresses.length > 0) {
-        const int = mijnInteresses[0];
-        if ('Notification' in window && Notification.permission === 'granted') {
-          new Notification('Het Buurtbord 🏘️', {
-            body: `${int.naam} (nr. ${int.huisnr}) heeft interesse getoond!`
-          });
-        }
-      }
+  const mijnNaam = document.getElementById('naam').value.trim() || localStorage.getItem('mijn_naam') || '';
+  const mijnHuisnr = document.getElementById('huisnummer').value.trim() || localStorage.getItem('mijn_huisnummer') || '';
+
+  if (!mijnNaam || !mijnHuisnr) return;
+
+  const mijnInteresses = nieuweInteresses.filter(i =>
+    i.naam.toLowerCase() === mijnNaam.toLowerCase() &&
+    i.huisnr.toLowerCase() === mijnHuisnr.toLowerCase()
+  );
+
+  if (mijnInteresses.length > 0) {
+    const int = mijnInteresses[0];
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('Het Buurtbord 🏘️', {
+        body: `${int.naam} (nr. ${int.huisnr}) heeft interesse getoond!`
+      });
     }
+  }
+}
 
     async function laadBerichten() {
       console.log('🔄 laadBerichten started');
