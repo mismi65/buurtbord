@@ -393,45 +393,46 @@
 }
 
     async function laadBerichten() {
-      console.log('🔄 laadBerichten started');
-      let berichten = [];
+  console.log('🔄 laadBerichten started');
+  let berichten = [];
 
-      if (useSupabase && db) {
-        try {
-          const { data } = await db.from('interesses').select('*');
-          if (data && data.length > lastCheckedInteresses) {
-            const nieuweInteresses = data.slice(lastCheckedInteresses);
-            await toonNotificatieVoorNieuweInteresses(nieuweInteresses);
-          }
-          lastCheckedInteresses = data ? data.length : 0;
-          cachedInteresses = data || [];
-          console.log('✅ Interesses geladen:', cachedInteresses.length);
-        } catch (e) {
-          console.warn('❌ Interesses laden:', e);
-          cachedInteresses = [];
-        }
-      }
-
-      if (useSupabase && db) {
-        try {
-          const { data, error } = await db
-            .from('berichten')
-            .select('*')
-            .order('created_at', { ascending: false });
-          if (error) throw error;
-          berichten = data || [];
-          console.log('✅ Berichten geladen:', berichten.length);
-        } catch (e) {
-          console.warn('❌ Supabase ophalen mislukt:', e);
-          berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
-        }
-      } else {
-        berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
-      }
-
-      console.log('🎨 Rendering berichten...');
-      await renderBerichten(berichten);
+  if (useSupabase && db) {
+    try {
+      const { data, error } = await db
+        .from('berichten')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      berichten = data || [];
+      console.log('✅ Berichten geladen:', berichten.length);
+    } catch (e) {
+      console.warn('❌ Supabase ophalen mislukt:', e);
+      berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
     }
+  } else {
+    berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
+  }
+
+  if (useSupabase && db) {
+    try {
+      const { data } = await db.from('interesses').select('*');
+      if (data && data.length > lastCheckedInteresses) {
+        const nieuweInteresses = data.slice(lastCheckedInteresses);
+        await toonNotificatieVoorNieuweInteresses(nieuweInteresses, berichten);
+      }
+      lastCheckedInteresses = data ? data.length : 0;
+      cachedInteresses = data || [];
+      console.log('✅ Interesses geladen:', cachedInteresses.length);
+    } catch (e) {
+      console.warn('❌ Interesses laden:', e);
+      cachedInteresses = [];
+    }
+  }
+
+  console.log('🎨 Rendering berichten...');
+  await renderBerichten(berichten);
+}
+    
     async function renderBerichten(berichten) {
       const bord = document.getElementById('bord');
       const mijnNaam = document.getElementById('naam').value.trim() || localStorage.getItem('mijn_naam') || '';
