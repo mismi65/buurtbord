@@ -391,7 +391,7 @@ async function toonNotificatieVoorNieuweInteresses(nieuweInteresses, alleBericht
 
     if (isMijnBericht && 'Notification' in window && Notification.permission === 'granted') {
       new Notification('Het Buurtbord 🏘️', {
-        body: `${interesse.naam} (nr. ${interesse.huisnr}) heeft interesse getoond in jouw bericht!`
+        body: `${interesse.naam} van nr. ${interesse.huisnr} heeft interesse getoond — neem contact op!`
       });
     }
   }
@@ -471,8 +471,7 @@ async function toonNotificatieVoorNieuweInteresses(nieuweInteresses, alleBericht
         if (interesses.length > 0) {
           interesseHtml = '<div class="interesse-voorstellen">';
           for (const int of interesses) {
-            const datum = int.voorstel_datum ? new Date(int.voorstel_datum).toLocaleDateString('nl-NL') : '?';
-            interesseHtml += `<div class="voorstel">💬 ${int.naam} (nr. ${int.huisnr}) wil ${datum}</div>`;
+            interesseHtml += `<div class="voorstel">💬 ${int.naam} van nr. ${int.huisnr} heeft interesse getoond — neem contact op!</div>`;
           }
           interesseHtml += '</div>';
         }
@@ -501,7 +500,7 @@ async function toonNotificatieVoorNieuweInteresses(nieuweInteresses, alleBericht
       console.log('✅ Render klaar');
     }
 
-    function toggleInteresse(berichtId) {
+    async function toggleInteresse(berichtId) {
       console.log('toggleInteresse called with ID:', berichtId);
       let mijnNaam = document.getElementById('naam').value.trim();
       let mijnHuisnr = document.getElementById('huisnummer').value.trim();
@@ -510,76 +509,26 @@ async function toonNotificatieVoorNieuweInteresses(nieuweInteresses, alleBericht
         if (!mijnNaam) return;
         document.getElementById('naam').value = mijnNaam;
       }
-      console.log('Showing datum picker for:', mijnNaam, mijnHuisnr, berichtId);
-      showDatumPicker(berichtId, mijnNaam, mijnHuisnr);
+      await addInteresse(berichtId, mijnNaam, mijnHuisnr);
     }
 
-    function showDatumPicker(berichtId, naam, huisnr) {
-      console.log('showDatumPicker:', berichtId, naam, huisnr);
-      const dialog = document.createElement('div');
-      dialog.style.cssText = `
-        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-        background: white; padding: 2rem; border-radius: 10px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 1000;
-        min-width: 300px;
-      `;
-      let opties = '<select id="datumSelect" style="width: 100%; padding: 0.5rem; margin: 1rem 0; border: 1px solid #ddd; border-radius: 5px;">';
-      for (let i = 0; i < 14; i++) {
-        const d = new Date();
-        d.setDate(d.getDate() + i);
-        const dag = ['Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag'][d.getDay()];
-        const datum = d.toLocaleDateString('nl-NL');
-        opties += `<option value="${datum}">${dag} ${datum}</option>`;
-      }
-      opties += '</select>';
-      dialog.innerHTML = `
-        <h3>Wanneer wil je langs?</h3>
-        ${opties}
-        <div style="margin-top: 1rem; display: flex; gap: 1rem;">
-          <button onclick="this.parentElement.parentElement.remove()" style="flex: 1; padding: 0.5rem; border: none; background: #f0f0f0; border-radius: 5px; cursor: pointer;">Annuleren</button>
-          <button id="bevestigBtn" style="flex: 1; padding: 0.5rem; border: none; background: #5c7a52; color: white; border-radius: 5px; cursor: pointer;">Bevestigen</button>
-        </div>
-      `;
-      document.body.appendChild(dialog);
-      document.getElementById('bevestigBtn').addEventListener('click', async () => {
-        const datum = document.getElementById('datumSelect').value;
-        console.log('Bevestigen clicked:', berichtId, naam, huisnr, datum);
-        await addInteresse(berichtId, naam, huisnr, datum);
-        dialog.remove();
-      });
-    }
-
-    async function addInteresse(berichtId, naam, huisnr, voorstel_datum) {
-      console.log('addInteresse called:', {berichtId, naam, huisnr, voorstel_datum});
+    async function addInteresse(berichtId, naam, huisnr) {
+      console.log('addInteresse called:', {berichtId, naam, huisnr});
       try {
         if (!useSupabase || !db) {
           showStatus('Supabase niet beschikbaar', 'error');
           return;
-        }
-        let isoDateTime = null;
-        if (voorstel_datum) {
-          const parts = voorstel_datum.split('-');
-          if (parts.length === 3) {
-            const d = new Date(parts[2], parts[1] - 1, parts[0], 12, 0, 0);
-            isoDateTime = d.toISOString();
-          }
         }
         const { error } = await db
           .from('interesses')
           .insert([{
             bericht_id: berichtId,
             naam: naam,
-            huisnr: huisnr,
-            voorstel_datum: isoDateTime
+            huisnr: huisnr
           }]);
         if (error) throw error;
         showStatus('Interesse getoond! 👍', 'success');
         await laadBerichten();
-        if ('Notification' in window && Notification.permission === 'granted') {
-          new Notification('Het Buurtbord', {
-            body: `Je hebt interesse getoond voor ${voorstel_datum}!`
-          });
-        }
       } catch (e) {
         console.error('Interesse error details:', e);
         showStatus('Fout: ' + (e.message || 'onbekend'), 'error');
