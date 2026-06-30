@@ -1,18 +1,21 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/mikes/Downloads/index_40.html -->
+<!-- 9:13 saved from url=(0046)file:///C:/Users/mikes/Downloads/index_41.html -->
 <html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Het Buurtbord</title>
-  <link rel="manifest" href="file:///C:/Users/mikes/Downloads/manifest.json">
-  <meta name="theme-color" content="#5c7a52">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <!-- Supabase client -->
-  <script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-messaging.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Het Buurtbord</title>
+<link rel="manifest" href="file:///C:/Users/mikes/Downloads/manifest.json">
+<meta name="theme-color" content="#5c7a52">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- Supabase client -->
+<script src="./Het Buurtbord_files/supabase.js.download"></script>
+
+<!-- Firebase compat SDK (werkt met gewone <script> tags, geen modules nodig) -->
+<script src="./Het Buurtbord_files/firebase-app-compat.js.download"></script>
+<script src="./Het Buurtbord_files/firebase-messaging-compat.js.download"></script>
+
   <style>
     /* ---------- Vormgeving ---------- */
     :root {
@@ -128,7 +131,7 @@
     .bericht.te_geef   { border-left-color: var(--groen); }
     .bericht.gezocht   { border-left-color: var(--oker);  }
     .bericht.samen_doen{ border-left-color: var(--blauw); }
-    
+
     /* Oude berichten (ouder dan een maand) */
     .bericht.oud {
       opacity: 0.6;
@@ -150,7 +153,7 @@
     .ruil  { font-style: italic; color: var(--zacht); margin: 0 0 0.6rem; }
     .ondertekening { font-size: 0.9rem; color: var(--zacht); }
     .ondertekening b { color: var(--inkt); font-weight: 600; }
-    
+
     .datum { font-size: 0.8rem; color: var(--zacht); margin: 0.2rem 0 0; }
 
     .nieuw-vlag {
@@ -210,88 +213,87 @@
       background: white;
       border-radius: 4px;
     }
+
+    body { margin: 0; padding: 0; }
+
+    header {
+      padding: 2.5rem 1.5rem;
+      background: linear-gradient(135deg,
+        rgba(212, 83, 126, 0.08) 0%,
+        rgba(29, 158, 117, 0.08) 100%);
+      border-bottom: 1px solid var(--lijn);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 0.5rem;
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--inkt);
+      letter-spacing: -0.4px;
+    }
+
+    .tagline {
+      font-size: 21px;
+      color: var(--zacht);
+      margin: 0 0 1.5rem;
+      font-weight: 700;
+    }
+
+    .intro {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 700px;
+    }
+
+    .intro-text {
+      font-size: 21px;
+      line-height: 1.6;
+      color: var(--inkt);
+      margin: 0;
+    }
+
+    .intro-text strong {
+      font-weight: 700;
+      color: var(--inkt);
+    }
+
+    .contrast {
+      padding: 1rem;
+      background: var(--papier);
+      border-left: 3px solid var(--oker);
+      border-radius: 6px;
+    }
+
+    .contrast p {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.6;
+      color: var(--inkt);
+    }
+
+    .contrast em {
+      color: var(--oker);
+      font-style: italic;
+      font-weight: 700;
+    }
   </style>
 </head>
 <body>
-  <style>
-  body { margin: 0; padding: 0; }
-  
-  header {
-    padding: 2.5rem 1.5rem;
-    background: linear-gradient(135deg, 
-      rgba(212, 83, 126, 0.08) 0%,
-      rgba(29, 158, 117, 0.08) 100%);
-    border-bottom: 1px solid var(--lijn);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  h1 {
-    margin: 0 0 0.5rem;
-    font-size: 28px;
-    font-weight: 500;
-    color: var(--inkt);
-    letter-spacing: -0.4px;
-  }
-  
-  .tagline {
-    font-size: 21px;
-    color: var(--zacht);
-    margin: 0 0 1.5rem;
-    font-weight: 700;
-  }
-  
-  .intro {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-width: 700px;
-  }
-  
-  .intro-text {
-    font-size: 21px;
-    line-height: 1.6;
-    color: var(--inkt);
-    margin: 0;
-  }
-  
-  .intro-text strong {
-    font-weight: 700;
-    color: var(--inkt);
-  }
-  
-  .contrast {
-    padding: 1rem;
-    background: var(--papier);
-    border-left: 3px solid var(--oker);
-    border-radius: 6px;
-  }
-  
-  .contrast p {
-    margin: 0;
-    font-size: 20px;
-    line-height: 1.6;
-    color: var(--inkt);
-  }
-  
-  .contrast em {
-    color: var(--oker);
-    font-style: italic;
-    font-weight: 700;
-  }
-</style>
 
 <header>
   <h1>Het Buurtbord</h1>
   <p class="tagline">Een prikbord voor onze straat — om elkaar te leren kennen</p>
-  
+
   <div class="intro">
     <p class="intro-text">Dit is geen marktplaats en geen wijkplatform. Het is een digitaal prikbord voor één straat, met één doel: dat mensen die naast elkaar wonen elkaars naam leren kennen en af en toe iets voor elkaar doen.</p>
-    
+
     <div class="contrast">
-      <p><strong>Het ruilen is de aanleiding.</strong></p> 
+      <p><strong>Het ruilen is de aanleiding.</strong></p>
         <p><em>Het echte resultaat is een buurt waar je elkaar gedag zegt.</em></p>
     </div>
   </div>
@@ -349,17 +351,358 @@
     </section>
 
     <!-- Het bord -->
-    <section id="bord"><p class="leeg">Nog geen berichten. Zet de eerste op het bord!</p></section>
+    <section id="bord">
+          <article class="bericht te_geef">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Te leen / te geef</span>
+            <p class="tekst">Tedybeer</p>
+            
+            <p class="ondertekening"><b>Sanne</b> van nr. 760</p>
+            <p class="datum">22u geleden</p>
+            <div class="interesse-voorstellen"><div class="voorstel">💬 mike (nr. 27) wil 29-6-2026</div><div class="voorstel">💬 mike (nr. 27) wil 29-6-2026</div><div class="voorstel">💬 mike (nr. 27) wil 29-6-2026</div></div>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;fb490563-9808-42e2-980a-2b890bc96a34&#39;);" title="Interesse">
+                🤍
+              </button>
+              <span class="interesse-list">3 voorstellen</span>
+              
+            </div>
+          </article>
+        
+          <article class="bericht gezocht">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Gezocht</span>
+            <p class="tekst">luchtballon</p>
+            
+            <p class="ondertekening"><b>mike</b> van nr. 27</p>
+            <p class="datum">23u geleden</p>
+            <div class="interesse-voorstellen"><div class="voorstel">💬 Sanne (nr. ) wil 29-6-2026</div></div>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;b6a11670-698a-483e-93bd-95686a478ecf&#39;);" title="Interesse">
+                🤍
+              </button>
+              <span class="interesse-list">1 voorstel</span>
+              
+            </div>
+          </article>
+        
+          <article class="bericht gezocht">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Gezocht</span>
+            <p class="tekst">Tweedehands iphoness</p>
+            
+            <p class="ondertekening"><b>Sanne</b> van nr. 760</p>
+            <p class="datum">1d geleden</p>
+            <div class="interesse-voorstellen"><div class="voorstel">💬 mike (nr. 27) wil 28-6-2026</div><div class="voorstel">💬 mike (nr. 27) wil 28-6-2026</div><div class="voorstel">💬 mike (nr. 27) wil 28-6-2026</div></div>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;d190d8f6-cd73-4e0f-9f17-7360a8254cd0&#39;);" title="Interesse">
+                🤍
+              </button>
+              <span class="interesse-list">3 voorstellen</span>
+              
+            </div>
+          </article>
+        
+          <article class="bericht te_geef">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Te leen / te geef</span>
+            <p class="tekst">Schuursponsjes</p>
+            
+            <p class="ondertekening"><b>Sanne</b> van nr. 760</p>
+            <p class="datum">1d geleden</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;fcb8384f-a654-4e98-bb6a-8e3ba9b3d46c&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        
+          <article class="bericht te_geef">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Te leen / te geef</span>
+            <p class="tekst">Verfkwast</p>
+            
+            <p class="ondertekening"><b>mike</b> van nr. 27</p>
+            <p class="datum">1d geleden</p>
+            <div class="interesse-voorstellen"><div class="voorstel">💬 Sanne (nr. 760) wil 28-6-2026</div></div>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;11653d51-f4a0-4f49-a7a4-d45860f6ad3c&#39;);" title="Interesse">
+                🤍
+              </button>
+              <span class="interesse-list">1 voorstel</span>
+              
+            </div>
+          </article>
+        
+          <article class="bericht samen_doen">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Samen doen</span>
+            <p class="tekst">Wanneer gaat er iemand golfen?</p>
+            
+            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
+            <p class="datum">1d geleden</p>
+            <div class="interesse-voorstellen"><div class="voorstel">💬 Sanne (nr. 760) wil 28-6-2026</div></div>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;3af6c092-e0ca-4ad8-9c32-342160902fea&#39;);" title="Interesse">
+                🤍
+              </button>
+              <span class="interesse-list">1 voorstel</span>
+              
+            </div>
+          </article>
+        
+          <article class="bericht gezocht">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Gezocht</span>
+            <p class="tekst">Harry Potter schaakbord</p>
+            
+            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
+            <p class="datum">2d geleden</p>
+            <div class="interesse-voorstellen"><div class="voorstel">💬 Sanne (nr. ) wil 29-6-2026</div></div>
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;b0354086-4872-4ba9-8967-fb396c862619&#39;);" title="Interesse">
+                🤍
+              </button>
+              <span class="interesse-list">1 voorstel</span>
+              
+            </div>
+          </article>
+        
+          <article class="bericht gezocht">
+            <span class="nieuw-vlag">nieuw deze week</span>
+            <span class="label">Gezocht</span>
+            <p class="tekst">Een zonnescherm</p>
+            
+            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
+            <p class="datum">4d geleden</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;d26ea57f-2790-4783-a25a-e88e30e0991f&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        
+          <article class="bericht samen_doen">
+            
+            <span class="label">Samen doen</span>
+            <p class="tekst">Potje schaken?</p>
+            
+            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
+            <p class="datum">7d geleden</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;9d45465c-fca5-49e8-aecb-7c06ca685b31&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        
+          <article class="bericht gezocht">
+            
+            <span class="label">Gezocht</span>
+            <p class="tekst">Batterijen</p>
+            
+            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
+            <p class="datum">9d geleden</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;fc51966a-1a1c-4fb9-9f90-8ef007f4496b&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        
+          <article class="bericht gezocht">
+            
+            <span class="label">Gezocht</span>
+            <p class="tekst">Golfballen en golf schoenen</p>
+            
+            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
+            <p class="datum">11d geleden</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;b0a95245-6d4d-4839-b492-a78225d4124f&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        
+          <article class="bericht samen_doen">
+            
+            <span class="label">Samen doen</span>
+            <p class="tekst">Voetballen kijken ?</p>
+            
+            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
+            <p class="datum">14d geleden</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;8bd46db3-5fc5-4098-b860-a55db3559055&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        
+          <article class="bericht gezocht">
+            
+            <span class="label">Gezocht</span>
+            <p class="tekst">Wie heeft golfballen over?</p>
+            
+            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
+            <p class="datum">20d geleden</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;f47bc3d6-6a8d-4175-b346-ba22f758f452&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        
+          <article class="bericht samen_doen">
+            
+            <span class="label">Samen doen</span>
+            <p class="tekst">Golfen volgende week woensdag 17 juni</p>
+            
+            <p class="ondertekening"><b>Mike</b> van nr. 27</p>
+            <p class="datum">20d geleden</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;df707de8-b731-4d45-9341-5510402f67eb&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        
+          <article class="bericht gezocht oud">
+            
+            <span class="label">Gezocht</span>
+            <p class="tekst">Lego</p>
+            <p class="ruil">Ertegenover: Boterkoek</p>
+            <p class="ondertekening"><b>Manon</b> van nr. 3</p>
+            <p class="datum">33d geleden</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;99126060-ec59-4cb6-b8e9-4ec4cf711696&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        
+          <article class="bericht samen_doen oud">
+            
+            <span class="label">Samen doen</span>
+            <p class="tekst">een potje monopoly?</p>
+            
+            <p class="ondertekening"><b>mike</b> van nr. 27</p>
+            <p class="datum">33d geleden</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;ad0b68a9-139d-4f6b-ada3-98bd58d0464c&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        
+          <article class="bericht te_geef oud">
+            
+            <span class="label">Te leen / te geef</span>
+            <p class="tekst">Hi Mike, ik heb ook lampen hier maar is het wel de bedoeling dat we dat delen? 
+Wilde reageren op jouw bericht maar dat lukt niet</p>
+            
+            <p class="ondertekening"><b>Manon</b> van nr. 3</p>
+            <p class="datum">33d geleden</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;dc37a008-4f37-4972-b958-efad9477467a&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        
+          <article class="bericht samen_doen oud">
+            
+            <span class="label">Samen doen</span>
+            <p class="tekst">Ik ben bezig om bloemen te haken, wil je aanhaken welkom op zaterdagochtend om 10 uur</p>
+            
+            <p class="ondertekening"><b>Manon</b> van nr. 3</p>
+            <p class="datum">33d geleden</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;29fed0e0-ccfa-4745-aa17-6a74f59a1260&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        
+          <article class="bericht samen_doen oud">
+            
+            <span class="label">Samen doen</span>
+            <p class="tekst">even stappen ?</p>
+            
+            <p class="ondertekening"><b>mike</b> van nr. 27</p>
+            <p class="datum">34d geleden</p>
+            
+            <div class="bericht-actions">
+              <button class="interesse-btn" onclick="toggleInteresse(&#39;7585a9f8-bdbc-41dd-ac78-ff1b31a0845d&#39;);" title="Interesse">
+                🤍
+              </button>
+              
+              
+            </div>
+          </article>
+        </section>
   </main>
 
   <script>
     /* =========================================================
        SUPABASE SETUP
        ========================================================= */
+    const SUPABASE_URL = 'https://zfbahltilsexlzlqdyxs.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_mufq7USEGM7n9QDYWeUrOw_xd9eoMy8';
+
+    let db = null;
+    let useSupabase = false;
+
+    if (window.supabase) {
+      try {
+        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        useSupabase = true;
+        console.log('✓ Supabase verbonden');
+      } catch (e) {
+        console.warn('Supabase niet beschikbaar, gebruik localStorage', e);
+      }
+    } else {
+      console.warn('Supabase SDK niet geladen, gebruik localStorage');
+    }
+
     /* =========================================================
        FIREBASE CLOUD MESSAGING SETUP
        ========================================================= */
-    
     const firebaseConfig = {
       apiKey: "AIzaSyBcjUd8QWtjYyB2o4mQRcB7e17mmaa8CmM",
       authDomain: "buurtbord-18966.firebaseapp.com",
@@ -369,40 +712,46 @@
       appId: "1:157567031537:web:b527d54ce7b84687a53150"
     };
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const messaging = firebase.messaging();
+    let messaging = null;
+    try {
+      firebase.initializeApp(firebaseConfig);
+      if (firebase.messaging.isSupported()) {
+        messaging = firebase.messaging();
+      } else {
+        console.warn('FCM niet ondersteund in deze browser');
+      }
+    } catch (e) {
+      console.warn('Firebase init mislukt:', e);
+    }
 
-    // Request permission untuk push notifications
     async function requestNotificationPermission() {
+      if (!messaging) return;
       try {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
           console.log('✅ Notificatie permission granted');
-          
-          // Get FCM token
+
           const token = await messaging.getToken({
             vapidKey: 'BKx8xGbXVkJSaXnjMzPNXL4i_3HzZq4LsYcyMvJKLzPkMqVVCCEpDPGPD_vYMsNvWXJQvP5gPzVyPjEjEjUFiIs'
           });
-          
+
           if (token) {
             console.log('🔔 FCM Token:', token);
             await saveFCMToken(token);
           }
         }
       } catch (e) {
-        console.warn('Permission denied:', e);
+        console.warn('Permission denied of token-fout:', e);
       }
     }
 
     async function saveFCMToken(token) {
       const mijnNaam = localStorage.getItem('mijn_naam');
       const mijnHuisnr = localStorage.getItem('mijn_huisnummer');
-      
+
       if (!mijnNaam || !mijnHuisnr || !useSupabase || !db) return;
 
       try {
-        // Opslaan in Supabase users table
         const { error } = await db.from('users').upsert([{
           naam: mijnNaam,
           huisnr: mijnHuisnr,
@@ -417,37 +766,18 @@
       }
     }
 
-    // Listen for incoming messages
-    messaging.onMessage((payload) => {
-      console.log('📬 Message received:', payload);
-      
-      const notificationTitle = payload.notification?.title || 'Het Buurtbord';
-      const notificationOptions = {
-        body: payload.notification?.body || 'Je hebt interesse!',
-        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect fill="%235c7a52" width="192" height="192"/><text x="96" y="120" font-size="100" fill="white" text-anchor="middle" font-weight="bold">🏘️</text></svg>'
-      };
+    if (messaging) {
+      messaging.onMessage((payload) => {
+        console.log('📬 Message received:', payload);
 
-      new Notification(notificationTitle, notificationOptions);
-      laadBerichten(); // Refresh bord
-    });
-    
-    /* ========================================================= */
-    const SUPABASE_KEY = 'sb_publishable_mufq7USEGM7n9QDYWeUrOw_xd9eoMy8';
+        const notificationTitle = payload.notification?.title || 'Het Buurtbord';
+        const notificationOptions = {
+          body: payload.notification?.body || 'Je hebt interesse!'
+        };
 
-    let db = null;
-    let useSupabase = false;
-
-    // Probeer Supabase te initializeren
-    if (window.supabase) {
-      try {
-        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        useSupabase = true;
-        console.log('✓ Supabase verbonden');
-      } catch (e) {
-        console.warn('Supabase niet beschikbaar, gebruik localStorage', e);
-      }
-    } else {
-      console.warn('Supabase SDK niet geladen, gebruik localStorage');
+        new Notification(notificationTitle, notificationOptions);
+        laadBerichten();
+      });
     }
 
     /* =========================================================
@@ -481,48 +811,26 @@
       const diff = now - new Date(timestamp).getTime();
       const uren = Math.floor(diff / (1000 * 60 * 60));
       const dagen = Math.floor(uren / 24);
-      
+
       if (dagen > 0) return `${dagen}d geleden`;
       if (uren > 0) return `${uren}u geleden`;
       return 'net geplaatst';
     }
 
-    async function getInteresse(berichtId) {
-      // Laad interesses van Supabase (niet localStorage meer)
-      if (useSupabase && db) {
-        try {
-          const { data, error } = await db
-            .from('interesses')
-            .select('naam, voorstel_datum')
-            .eq('bericht_id', berichtId);
-          
-          if (error) throw error;
-          return data || [];
-        } catch (e) {
-          console.warn('Interesses laden mislukt:', e);
-          return [];
-        }
-      }
-      return [];
-    }
-
-
     /* =========================================================
        BERICHTEN LADEN EN TONEN
        ========================================================= */
-    /* Globale cache voor interesses */
     let cachedInteresses = [];
-    let lastCheckedInteresses = 0; // Track wat we al hebben gezien
+    let lastCheckedInteresses = 0;
 
     async function toonNotificatieVoorNieuweInteresses(nieuweInteresses) {
       const mijnNaam = document.getElementById('naam').value.trim() || localStorage.getItem('mijn_naam') || '';
       const mijnHuisnr = document.getElementById('huisnummer').value.trim() || localStorage.getItem('mijn_huisnummer') || '';
-      
+
       if (!mijnNaam || !mijnHuisnr) return;
 
-      // Filter interesses die voor MIJ zijn
-      const mijnInteresses = nieuweInteresses.filter(i => 
-        i.naam.toLowerCase() === mijnNaam.toLowerCase() && 
+      const mijnInteresses = nieuweInteresses.filter(i =>
+        i.naam.toLowerCase() === mijnNaam.toLowerCase() &&
         i.huisnr.toLowerCase() === mijnHuisnr.toLowerCase()
       );
 
@@ -530,8 +838,7 @@
         const int = mijnInteresses[0];
         if ('Notification' in window && Notification.permission === 'granted') {
           new Notification('Het Buurtbord 🏘️', {
-            body: `${int.naam} (nr. ${int.huisnr}) heeft interesse getoond!`,
-            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect fill="%235c7a52" width="192" height="192"/><text x="96" y="120" font-size="100" fill="white" text-anchor="middle" font-weight="bold">🏘️</text></svg>'
+            body: `${int.naam} (nr. ${int.huisnr}) heeft interesse getoond!`
           });
         }
       }
@@ -541,17 +848,15 @@
       console.log('🔄 laadBerichten started');
       let berichten = [];
 
-      // Laad EERST alle interesses van Supabase
       if (useSupabase && db) {
         try {
           const { data } = await db.from('interesses').select('*');
-          
-          // Controleer op NIEUWE interesses voor notificatie
+
           if (data && data.length > lastCheckedInteresses) {
             const nieuweInteresses = data.slice(lastCheckedInteresses);
             await toonNotificatieVoorNieuweInteresses(nieuweInteresses);
           }
-          
+
           lastCheckedInteresses = data ? data.length : 0;
           cachedInteresses = data || [];
           console.log('✅ Interesses geladen:', cachedInteresses.length);
@@ -598,23 +903,20 @@
       const eenWeek = 7 * 24 * 60 * 60 * 1000;
       const eenMaand = 30 * 24 * 60 * 60 * 1000;
 
-      // Render berichten met cachedInteresses
       let html = '';
       for (const b of berichten) {
         const createdAt = b.created_at ? new Date(b.created_at).getTime() : Date.now();
         const isNieuw = (Date.now() - createdAt) < eenWeek;
         const isOud = (Date.now() - createdAt) >= eenMaand;
-        const isOwner = mijnNaam && mijnHuisnr && 
+        const isOwner = mijnNaam && mijnHuisnr &&
                         mijnNaam.toLowerCase() === b.naam.toLowerCase() &&
                         mijnHuisnr.toLowerCase() === b.huisnr.toLowerCase();
 
-        // Haal interesses voor dit bericht uit cache
         const interesses = cachedInteresses.filter(i => i.bericht_id === b.id);
         if (interesses.length > 0) {
           console.log(`📌 ${b.naam}: ${interesses.length} interesses`);
         }
 
-        // Bouw interesse-section
         let interesseHtml = '';
         if (interesses.length > 0) {
           interesseHtml = '<div class="interesse-voorstellen">';
@@ -656,7 +958,7 @@
       console.log('toggleInteresse called with ID:', berichtId);
       let mijnNaam = document.getElementById('naam').value.trim();
       let mijnHuisnr = document.getElementById('huisnummer').value.trim();
-      
+
       if (!mijnNaam || !mijnHuisnr) {
         mijnNaam = mijnNaam || prompt('Wat is je naam?');
         if (!mijnNaam) return;
@@ -664,7 +966,6 @@
       }
 
       console.log('Showing datum picker for:', mijnNaam, mijnHuisnr, berichtId);
-      // Datum-picker dialog
       showDatumPicker(berichtId, mijnNaam, mijnHuisnr);
     }
 
@@ -673,16 +974,13 @@
       const dialog = document.createElement('div');
       dialog.style.cssText = `
         position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-        background: white; padding: 2rem; border-radius: 10px; 
+        background: white; padding: 2rem; border-radius: 10px;
         box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 1000;
         min-width: 300px;
       `;
 
-      const morgen = new Date();
-      morgen.setDate(morgen.getDate() + 1);
-      
       let opties = '<select id="datumSelect" style="width: 100%; padding: 0.5rem; margin: 1rem 0; border: 1px solid #ddd; border-radius: 5px;">';
-      
+
       for (let i = 0; i < 14; i++) {
         const d = new Date();
         d.setDate(d.getDate() + i);
@@ -713,15 +1011,13 @@
 
     async function addInteresse(berichtId, naam, huisnr, voorstel_datum) {
       console.log('addInteresse called:', {berichtId, naam, huisnr, voorstel_datum});
-      
+
       try {
         if (!useSupabase || !db) {
           showStatus('Supabase niet beschikbaar', 'error');
           return;
         }
 
-        // Voeg interesse direct toe met het bericht ID dat we hebben
-        // Convert voorstel_datum (DD-M-YYYY string) naar ISO timestamp
         let isoDateTime = null;
         if (voorstel_datum) {
           const parts = voorstel_datum.split('-');
@@ -745,7 +1041,6 @@
         showStatus('Interesse getoond! 👍', 'success');
         await laadBerichten();
 
-        // Push-notificatie
         if ('Notification' in window && Notification.permission === 'granted') {
           new Notification('Het Buurtbord', {
             body: `Je hebt interesse getoond voor ${voorstel_datum}!`
@@ -776,7 +1071,6 @@
         return;
       }
 
-      // Sla je gegevens op
       localStorage.setItem('mijn_naam', naam);
       localStorage.setItem('mijn_huisnummer', huisnummer);
 
@@ -796,21 +1090,18 @@
           showStatus('Bericht geplaatst! 🎉', 'success');
         } catch (e) {
           console.warn('Supabase plaatsen mislukt, opslaan in localStorage:', e);
-          // Fallback: opslaan in localStorage
           let berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
           berichten.unshift(nieuwBericht);
           localStorage.setItem('buurtbord_berichten', JSON.stringify(berichten));
           showStatus('Bericht opgeslagen (offline)', 'success');
         }
       } else {
-        // Alleen localStorage
         let berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
         berichten.unshift(nieuwBericht);
         localStorage.setItem('buurtbord_berichten', JSON.stringify(berichten));
         showStatus('Bericht opgeslagen', 'success');
       }
 
-      // Velden leegmaken en bord verversen
       document.getElementById('tekst').value = '';
       document.getElementById('ruil').value  = '';
       document.getElementById('huisnummer').value = '';
@@ -830,7 +1121,6 @@
 
       if (!confirm('Dit bericht echt verwijderen?')) return;
 
-      // Verwijder uit Supabase
       if (useSupabase && db) {
         db.from('berichten').delete().eq('id', berichtId)
           .then(({ error }) => {
@@ -842,10 +1132,9 @@
             laadBerichten();
           });
       } else {
-        // Fallback: localStorage
         let berichten = JSON.parse(localStorage.getItem('buurtbord_berichten') || '[]');
-        berichten = berichten.filter(b => 
-          !(b.naam.toLowerCase() === mijnNaam.toLowerCase() && 
+        berichten = berichten.filter(b =>
+          !(b.naam.toLowerCase() === mijnNaam.toLowerCase() &&
             b.huisnr.toLowerCase() === mijnHuisnr.toLowerCase())
         );
         localStorage.setItem('buurtbord_berichten', JSON.stringify(berichten));
@@ -868,7 +1157,7 @@
     function laadMijnGegevens() {
       const opgeslagenNaam = localStorage.getItem('mijn_naam');
       const opgeslagenHuisnr = localStorage.getItem('mijn_huisnummer');
-      
+
       if (opgeslagenNaam) {
         document.getElementById('naam').value = opgeslagenNaam;
         document.getElementById('naam').disabled = true;
@@ -878,29 +1167,12 @@
         document.getElementById('huisnummer').disabled = true;
       }
 
-      // Request notification permission & get FCM token
       requestNotificationPermission();
     }
-
-
 
     /* =========================================================
        INITIALIZE
        ========================================================= */
-    
-    // Service Worker voor push-notificaties (simpel)
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('data:application/javascript;charset=utf-8,' + encodeURIComponent(`
-        self.addEventListener('push', event => {
-          self.registration.showNotification('Het Buurtbord', {
-            body: 'Je hebt interesse getoond! Kijk op het bord.',
-            icon: '🏘️'
-          });
-        });
-      `)).catch(e => console.log('SW:', e));
-    }
-
-    // Vraag push-notificatie permission
     if ('Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
     }
@@ -908,10 +1180,10 @@
     laadMijnGegevens();
     laadBerichten();
 
-    // **POLLING:** Elke 30 sec checken op nieuwe interesses
     setInterval(laadBerichten, 30000);
     console.log('🔄 Polling gestart — checkt elke 30 sec op updates!');
   </script>
+
 
 
 </body></html>
