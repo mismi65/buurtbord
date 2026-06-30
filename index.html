@@ -664,6 +664,19 @@
       ruilVeld.style.display = document.getElementById('soort').value === 'gezocht' ? 'block' : 'none';
     });
 
+    document.getElementById('meldingenKnop').addEventListener('click', async () => {
+      const btn = document.getElementById('meldingenKnop');
+      btn.disabled = true;
+      btn.textContent = 'Bezig...';
+      await requestNotificationPermission();
+      if (Notification.permission === 'granted') {
+        btn.textContent = '✅ Meldingen aan';
+      } else {
+        btn.textContent = '🔔 Meldingen aanzetten';
+        btn.disabled = false;
+      }
+    });
+    
     function laadMijnGegevens() {
       const opgeslagenNaam = localStorage.getItem('mijn_naam');
       const opgeslagenHuisnr = localStorage.getItem('mijn_huisnummer');
@@ -675,7 +688,7 @@
         document.getElementById('huisnummer').value = opgeslagenHuisnr;
         document.getElementById('huisnummer').disabled = true;
       }
-      requestNotificationPermission();
+     
     }
 
     if ('Notification' in window && Notification.permission === 'default') {
